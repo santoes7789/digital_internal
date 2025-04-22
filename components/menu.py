@@ -1,10 +1,18 @@
-pie_names = ["Apple Pie", "Cherry Pie", "Blueberry Pie", 
-             "Pumpkin Pie", "Pecan Pie", "Lemon Meringue Pie", 
-             "Key Lime Pie", "Chocolate Cream Pie", 
-             "Banana Cream Pie", "Butter Chicken Pie"]
+# pie information stored in one array
+pies = [
+    {"name": "Apple Pie", "price": 10},
+    {"name": "Cherry Pie", "price": 12},
+    {"name": "Blueberry Pie", "price": 15},
+    {"name": "Pumpkin Pie", "price": 8},
+    {"name": "Pecan Pie", "price": 14},
+    {"name": "Lemon Meringue Pie", "price": 11},
+    {"name": "Key Lime Pie", "price": 13},
+    {"name": "Chocolate Cream Pie", "price": 9},
+    {"name": "Banana Cream Pie", "price": 16},
+    {"name": "Butter Chicken Pie", "price": 7}
+]
 
-pie_prices = [10, 12, 15, 8, 14, 11, 13, 9, 16, 7]
-
-for index in range(len(pie_names)):
-    print(f"{index + 1}. {pie_names[index]} - ${pie_prices[index]:.2f}")
+# prints out pie info
+for index, pie in enumerate(pies):
+    print(f"{index + 1}. {pie["name"]} - ${pie["price"]:.2f}")
 print("====================================================")
