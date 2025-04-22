@@ -12,7 +12,19 @@ pies = [
     {"name": "Butter Chicken Pie", "price": 7}
 ]
 
-# prints out pie info
-for index, pie in enumerate(pies):
-    print(f"{index + 1}. {pie["name"]} - ${pie["price"]:.2f}")
-print("====================================================")
+column_headers = ["Index", "Pie Name", "Price ($)"]
+column_widths = [8, 23, 7]
+
+# print header
+for i in range(len(column_headers)):
+    print(f"{column_headers[i]:<{column_widths[i]}}", end="")
+print()
+print("--------------------------------------------")
+
+# print pies
+for row, pie in enumerate(pies):
+    print(f"{row + 1:<{column_widths[0]}}", end="")
+    print(f"{pie['name']:<{column_widths[1]}}", end="")
+    print(f"{pie['price']:>{column_widths[2]}.2f}", end="")
+    print()
+print("============================================")
