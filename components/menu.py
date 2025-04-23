@@ -34,12 +34,15 @@ def print_menu():
 
 def get_order():
     while True:
+        # Get user input
         user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
         if user_input == "done":
             break
 
-        order = int(user_input)
-        if order > 0 and order <= len(pies):
+        # Convert to 0-based index
+        order = int(user_input) - 1 
+
+        if order >= 0 and order < len(pies):
             print(f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
             user_order.append(pies[order])
         else:
