@@ -12,19 +12,41 @@ pies = [
     {"name": "Butter Chicken Pie", "price": 7}
 ]
 
-column_headers = ["Index", "Pie Name", "Price ($)"]
-column_widths = [8, 23, 7]
+user_order = []
 
-# print header
-for i in range(len(column_headers)):
-    print(f"{column_headers[i]:<{column_widths[i]}}", end="")
-print()
-print("--------------------------------------------")
+def print_menu():
+    column_headers = ["Index", "Pie Name", "Price ($)"]
+    column_widths = [8, 23, 7]
 
-# print pies
-for row, pie in enumerate(pies):
-    print(f"{row + 1:<{column_widths[0]}}", end="")
-    print(f"{pie['name']:<{column_widths[1]}}", end="")
-    print(f"{pie['price']:>{column_widths[2]}.2f}", end="")
+    # print header
+    for i in range(len(column_headers)):
+        print(f"{column_headers[i]:<{column_widths[i]}}", end="")
     print()
-print("============================================")
+    print("--------------------------------------------")
+
+    # print pies
+    for row, pie in enumerate(pies):
+        print(f"{row + 1:<{column_widths[0]}}", end="")
+        print(f"{pie['name']:<{column_widths[1]}}", end="")
+        print(f"{pie['price']:>{column_widths[2]}.2f}", end="")
+        print()
+    print("============================================")
+
+def get_order():
+    while True:
+        user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
+        if user_input == "done":
+            break
+
+        order = int(user_input)
+        if order > 0 and order <= len(pies):
+            print(f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
+            user_order.append(pies[order])
+        else:
+            print("Invalid index. Please try again.")
+    
+
+print_menu()
+get_order()
+print(user_order)
+
