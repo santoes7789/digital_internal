@@ -1,3 +1,5 @@
+import validator
+
 # pie information stored in one array
 pies = [
     {"name": "Apple Pie", "price": 10},
@@ -18,13 +20,13 @@ def print_menu():
     column_headers = ["Index", "Pie Name", "Price ($)"]
     column_widths = [8, 23, 7]
 
-    # print header
+    # Print header
     for i in range(len(column_headers)):
         print(f"{column_headers[i]:<{column_widths[i]}}", end="")
     print()
     print("--------------------------------------------")
 
-    # print pies
+    # Print pies
     for row, pie in enumerate(pies):
         print(f"{row + 1:<{column_widths[0]}}", end="")
         print(f"{pie['name']:<{column_widths[1]}}", end="")
@@ -38,6 +40,11 @@ def get_order():
         user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
         if user_input == "done":
             break
+
+        # Validate input
+        if not validator.validate_int(user_input):
+            print("Invalid input. Please enter a valid index or 'done'.")
+            continue
 
         # Convert to 0-based index
         order = int(user_input) - 1 
