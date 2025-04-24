@@ -14,9 +14,12 @@ pies = [
     {"name": "Butter Chicken Pie", "price": 7}
 ]
 
+column_headers = ["Index", "Pie Name", "Price ($)"]
+column_widths = [8, 23, 7]
+
 user_order = []
 
-menu.print_menu()
+menu.print_menu(pies, column_headers, column_widths)
 
 while True:
     # Get user input
@@ -27,15 +30,17 @@ while True:
     # Check for commands
     if user_input in ("done", "d"):
         break
+
     elif user_input in ("menu", "m"):
-        menu.print_menu()
+        menu.print_menu(pies, column_headers, column_widths)
+
     elif user_input in ("clear", "c"):
         user_order.clear()
         print("Your order has been cleared.")
+
     elif user_input in ("show", "s"):
         print("Your current order:")
-        for pie in user_order:
-            print(f"{pie['name']} for ${pie['price']:.2f}")
+        menu.print_menu(user_order, column_headers, column_widths)
     else:
         # Validate input
         if not validator.validate_int(user_input):

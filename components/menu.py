@@ -12,21 +12,22 @@ pies = [
     {"name": "Butter Chicken Pie", "price": 7}
 ]
 
-def print_menu():
-    column_headers = ["Index", "Pie Name", "Price ($)"]
-    column_widths = [8, 23, 7]
+column_headers = ["Index", "Pie Name", "Price ($)"]
+column_widths = [8, 23, 7]
+
+def print_menu(array, headers, widths):
 
     # Print header
-    for i in range(len(column_headers)):
-        print(f"{column_headers[i]:<{column_widths[i]}}", end="")
+    for i in range(len(headers)):
+        print(f"{headers[i]:<{widths[i]}}", end="")
     print()
     print("--------------------------------------------")
 
     # Print pies
-    for row, pie in enumerate(pies):
+    for row, item in enumerate(array):
         print(f"{row + 1:<{column_widths[0]}}", end="")
-        print(f"{pie['name']:<{column_widths[1]}}", end="")
-        print(f"{pie['price']:>{column_widths[2]}.2f}", end="")
+        print(f"{item['name']:<{column_widths[1]}}", end="")
+        print(f"{item['price']:>{column_widths[2]}.2f}", end="")
         print()
     print("============================================")
 
