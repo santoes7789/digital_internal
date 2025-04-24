@@ -39,8 +39,47 @@ while True:
         print("Your order has been cleared.")
 
     elif user_input in ("show", "s"):
+        if not user_order:
+            print("Your order is empty.")
+            continue
+
         print("Your current order:")
         menu.print_menu(user_order, column_headers, column_widths)
+    
+    elif user_input in ("remove", "r"):
+        if not user_order:
+            print("Your order is empty. Nothing to remove.")
+            continue
+
+        print("Your current order:")
+        menu.print_menu(user_order, column_headers, column_widths)
+
+        remove_index = input("Enter the index of the pie you want to remove: ")
+
+        # Checks if input is an integer
+        if not validator.validate_int(remove_index):
+            print("Invalid input. No item removed.")
+            continue
+
+        # Convert to 0-based index
+        remove_index = int(remove_index) - 1
+
+        # Remove pie from order
+        if 0 <= remove_index < len(user_order):
+            removed_pie = user_order.pop(remove_index)
+            print(f"Removed {removed_pie['name']} from your order.")
+        else:
+            print("Invalid index. No item removed.")
+
+    elif user_input in ("help", "h"):
+        print("Available commands:")
+        print("  'menu' or 'm' - Show the menu")
+        print("  'done' or 'd' - Finish ordering")
+        print("  'clear' or 'c' - Clear your order")
+        print("  'show' or 's' - Show your current order")
+        print("  'remove' or 'r' - Remove a pie from your order")
+        print("  'help' or 'h' - Show this help message")
+
     else:
         # Validate input
         if not validator.validate_int(user_input):
@@ -50,7 +89,7 @@ while True:
         # Convert to 0-based index
         order = int(user_input) - 1 
 
-        if order >= 0 and order < len(pies):
+        if 0 <= order < len(pies):
             print(f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
             user_order.append(pies[order])
         else:
