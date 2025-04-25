@@ -5,3 +5,8 @@ def validate_int(value):
         return True
     except ValueError:
         return False
+
+def validate_name(name):
+    if not name.isalpha():
+        return False
+    return True
