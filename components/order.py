@@ -20,6 +20,7 @@ column_widths = [8, 23, 7]
 class Order():
     def __init__(self):
         self.order = []
+        self.done = False
 
     
 
@@ -30,10 +31,31 @@ class Order():
             total_cost += pie['price']
         return total_cost
 
+    # Finish ordering
+    def finish(self):
+        if not self.order:
+            print("Your order is empty. Please order before finishing.")
+            return
+
+        self.show_order()
+
+        confirmation = input("Are you sure you want to finish ordering? (type yes to confirm, anything else to cancel): ").lower()
+
+        if confirmation in ("yes", "y"):
+            self.done = True
+
     # Prints menu
     def print_menu(self):
         menu.print_table(pies, column_headers, column_widths)
 
+    def exit(self):
+        if self.order:
+            confirmation = input("Are you sure you want to exit? All items in order will be cleared. (type yes to confirm, anything else to cancel): ").lower()
+            if not confirmation in ("yes", "y"):
+                return
+
+        print("Exiting the ordering system. Goodbye!")
+        self.done = True
 
     # Clears order asks for confirmation before doing so
     def clear_order(self):
@@ -95,30 +117,17 @@ class Order():
         print("You can also type in commands for more options.")
         self.show_help()
 
-        while True:
+        while not self.done:
             # Get user input
             user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
             user_input = user_input.lower()
 
             # Check for commands
             if user_input in ("done", "d"):
-                if not self.order:
-                    print("Your order is empty. Please add pies before finishing.")
-                    continue
-
-                self.show_order()
-
-                confirmation = input("Are you sure you want to finish ordering? (type yes to confirm, anything else to cancel): ").lower()
-
-                if confirmation in ("yes", "y"):
-                    return True
+                self.finish()
 
             elif user_input in ("exit", "e"):
-                confirmation = input("Are you sure you want to exit? All items in order will be cleared. (type yes to confirm, anything else to cancel): ").lower()
-
-                if confirmation in ("yes", "y"):
-                    print("Exiting the ordering system. Goodbye!")
-                    return False
+                self.exit()
 
             elif user_input in ("menu", "m"):
                 self.print_menu()
