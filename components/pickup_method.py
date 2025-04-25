@@ -1,12 +1,13 @@
-import validator
 print("Would you like to pick up your order or have it delivered?")
-print("Enter 1 for Pick up")
-print("Enter 2 for Delivery")
+print("Input 'pickup' or 'p' for Pick up")
+print("Input 'delivery' or 'd' for Delivery")
 
-choice = input("Enter your choice: ")
-if not validator.validate_int(choice): 
-    print("Invalid choice. Please enter 1 or 2.")
-elif int(choice) == 1:
+choice = input("Enter your choice: ").lower()
+
+if choice in ("pickup", "pick up", "pick", "p"):
     print("You have chosen to pick up your order.")
-elif int(choice) == 2:
+
+elif choice in ("delivery", "deliver", "d"):
     print("You have chosen to have your order delivered.")
+else:
+    print("Invalid choice.")
