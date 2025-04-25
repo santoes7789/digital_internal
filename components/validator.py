@@ -1,3 +1,5 @@
+import re
+
 # Checks if a given value is an integer
 def validate_int(value):
     try:
@@ -7,6 +9,8 @@ def validate_int(value):
         return False
 
 def validate_name(name):
-    if not name.isalpha():
-        return False
-    return True
+    # Allow only letters, hyphens, spaces, and apostrophes
+    allowed_chars = r"[a-zA-Z-' ]+"
+    if re.fullmatch(allowed_chars, name):
+        return True 
+    return False 
