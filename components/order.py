@@ -19,47 +19,44 @@ column_widths = [8, 23, 7]
 
 user_order = []
 
-menu.print_menu(pies, column_headers, column_widths)
+menu.print_table(pies, column_headers, column_widths)
 
-while True:
-    # Get user input
-    user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
+def order():
+    def done():
+        print("Your order summary:")
+        menu.print_table(user_order, column_headers, column_widths)
 
-    user_input = user_input.lower()
+    def print_menu():
+        menu.print_table(pies, column_headers, column_widths)
 
-    # Check for commands
-    if user_input in ("done", "d"):
-        break
-
-    elif user_input in ("menu", "m"):
-        menu.print_menu(pies, column_headers, column_widths)
-
-    elif user_input in ("clear", "c"):
+    def clear_order():
+        if not user_order:
+            print("Your order is empty.")
+            return
         user_order.clear()
         print("Your order has been cleared.")
 
-    elif user_input in ("show", "s"):
+    def show_order():
         if not user_order:
             print("Your order is empty.")
-            continue
-
+            return
         print("Your current order:")
-        menu.print_menu(user_order, column_headers, column_widths)
+        menu.print_table(user_order, column_headers, column_widths)
     
-    elif user_input in ("remove", "r"):
+    def remove_pie():
         if not user_order:
             print("Your order is empty. Nothing to remove.")
-            continue
+            return
 
         print("Your current order:")
-        menu.print_menu(user_order, column_headers, column_widths)
+        menu.print_table(user_order, column_headers, column_widths)
 
         remove_index = input("Enter the index of the pie you want to remove: ")
 
         # Checks if input is an integer
         if not validator.validate_int(remove_index):
             print("Invalid input. No item removed.")
-            continue
+            return
 
         # Convert to 0-based index
         remove_index = int(remove_index) - 1
@@ -70,8 +67,8 @@ while True:
             print(f"Removed {removed_pie['name']} from your order.")
         else:
             print("Invalid index. No item removed.")
-
-    elif user_input in ("help", "h"):
+    
+    def show_help():
         print("Available commands:")
         print("  'menu' or 'm' - Show the menu")
         print("  'done' or 'd' - Finish ordering")
@@ -80,20 +77,45 @@ while True:
         print("  'remove' or 'r' - Remove a pie from your order")
         print("  'help' or 'h' - Show this help message")
 
-    else:
-        # Validate input
-        if not validator.validate_int(user_input):
-            print("Invalid input. Please enter a valid index or a command.")
-            continue
+    while True:
+        # Get user input
+        user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
 
-        # Convert to 0-based index
-        order = int(user_input) - 1 
+        user_input = user_input.lower()
 
-        if 0 <= order < len(pies):
-            print(f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
-            user_order.append(pies[order])
-        else:
-            print("Invalid index. Please try again.")
+        # Check for commands
+        if user_input in ("done", "d"):
+            done()
+            break
+
+        elif user_input in ("menu", "m"):
+            print_menu()
+
+        elif user_input in ("clear", "c"):
+            clear_order()
+
+        elif user_input in ("show", "s"):
+            show_order()
         
-print(user_order)
-    
+        elif user_input in ("remove", "r"):
+            remove_pie()
+
+        elif user_input in ("help", "h"):
+            show_help()
+
+        else:
+            # Validate input
+            if not validator.validate_int(user_input):
+                print("Invalid input. Please enter a valid index or a command.")
+                continue
+
+            # Convert to 0-based index
+            order = int(user_input) - 1 
+
+            if 0 <= order < len(pies):
+                print(f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
+                user_order.append(pies[order])
+            else:
+                print("Invalid index. Please try again.")
+            
+order()

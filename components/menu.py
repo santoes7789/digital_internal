@@ -15,7 +15,7 @@ pies = [
 column_headers = ["Index", "Pie Name", "Price ($)"]
 column_widths = [8, 23, 7]
 
-def print_menu(array, headers, widths):
+def print_table(array, headers, widths):
 
     # Print header
     for i in range(len(headers)):
