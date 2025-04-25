@@ -73,7 +73,10 @@ class Order():
     # Shows current order
     def show_order(self):
         print("Your current order:")
-        menu.print_table(self.order, column_headers, column_widths)
+        table = self.order.copy()
+        table.append(menu.RowType.SINGLE_LINE)  # Add a single line separator
+        table.append({"index": "", "name": "Total Cost", "price": self.calculate_cost()})  # Add total cost to the order list
+        menu.print_table(table, column_headers, column_widths)
     
     # Removes pie from order
     def remove_pie(self):
@@ -164,5 +167,3 @@ class Order():
                     print("Invalid index. Please try again.")
 user_order = Order()
 user_order.get()
-
-menu.print_table(user_order.order, column_headers, column_widths)

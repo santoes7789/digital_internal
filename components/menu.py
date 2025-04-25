@@ -1,3 +1,7 @@
+from enum import Enum
+class RowType(Enum):
+    SINGLE_LINE = 1
+    DOULBLE_LINE = 2
 # pie information stored in one array
 pies = [
     {"name": "Apple Pie", "price": 10},
@@ -25,9 +29,15 @@ def print_table(array, headers, widths):
 
     # Print pies
     for row, item in enumerate(array):
-        print(f"{row + 1:<{column_widths[0]}}", end="")
-        print(f"{item['name']:<{column_widths[1]}}", end="")
-        print(f"{item['price']:>{column_widths[2]}.2f}", end="")
-        print()
+        if item == RowType.SINGLE_LINE:
+            print("--------------------------------------------")
+        elif item == RowType.DOULBLE_LINE:
+            print("============================================")
+        else:
+            print(f"{item.get("index", row + 1):<{column_widths[0]}}", end="")
+            print(f"{item.get("name", ""):<{column_widths[1]}}", end="")
+            print(f"{item.get("price", ""):<{column_widths[2]}.2f}", end="")
+            print()
+
     print("============================================")
 
