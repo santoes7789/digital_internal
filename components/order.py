@@ -72,6 +72,10 @@ class Order():
 
     # Shows current order
     def show_order(self):
+        if not self.order:
+            print("Your order is empty.")
+            return
+
         print("Your current order:")
         table = self.order.copy()
         table.append(menu.RowType.SINGLE_LINE)  # Add a single line separator
@@ -84,7 +88,8 @@ class Order():
             print("Your order is empty. Nothing to remove.")
             return
 
-        self.show_order()
+        print("Your current order:")
+        menu.print_table(self.order, column_headers, column_widths)
 
         remove_index = input("Enter the index of the pie you want to remove: ")
 
@@ -125,45 +130,35 @@ class Order():
             user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
             user_input = user_input.lower()
 
-            # Check for commands
-            if user_input in ("done", "d"):
-                self.finish()
+            commands = {
+                ("done", "d"): self.finish,
+                ("exit", "e"): self.exit,
+                ("menu", "m"): self.print_menu,
+                ("clear", "c"): self.clear_order,
+                ("show", "s"): self.show_order,
+                ("remove", "r"): self.remove_pie,
+                ("help", "h"): self.show_help
+            }
 
-            elif user_input in ("exit", "e"):
-                self.exit()
-
-            elif user_input in ("menu", "m"):
-                self.print_menu()
-
-            elif user_input in ("clear", "c"):
-                self.clear_order()
-
-            elif user_input in ("show", "s"):
-                if not self.order:
-                    print("Your order is empty.")
-                    continue
-
-                self.show_order()
-            
-            elif user_input in ("remove", "r"):
-                self.remove_pie()
-
-            elif user_input in ("help", "h"):
-                self.show_help()
+            for key, command in commands.items():
+                if user_input in key:
+                    command()
+                    break
 
             # Check if input is an integer, for ordering a pie
-            elif not validator.validate_int(user_input):
-                print("Invalid input. Please enter a valid index or a command.")
-
-            # Add pie based on index
             else:
-                # Convert to 0-based index
-                order = int(user_input) - 1 
+                if not validator.validate_int(user_input):
+                    print("Invalid input. Please enter a valid index or a command.")
 
-                if 0 <= order < len(pies):
-                    print(f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
-                    self.order.append(pies[order])
+                # Add pie based on index
                 else:
-                    print("Invalid index. Please try again.")
+                    # Convert to 0-based index
+                    order = int(user_input) - 1 
+
+                    if 0 <= order < len(pies):
+                        print(f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
+                        self.order.append(pies[order])
+                    else:
+                        print("Invalid index. Please try again.")
 user_order = Order()
 user_order.get()
