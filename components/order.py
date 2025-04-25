@@ -39,7 +39,7 @@ class Order():
 
         self.show_order()
 
-        confirmation = input("Are you sure you want to finish ordering? (type yes to confirm, anything else to cancel): ").lower()
+        confirmation = input("Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
 
         if confirmation in ("yes", "y"):
             self.done = True
@@ -50,7 +50,7 @@ class Order():
 
     def exit(self):
         if self.order:
-            confirmation = input("Are you sure you want to exit? All items in order will be cleared. (type yes to confirm, anything else to cancel): ").lower()
+            confirmation = input("Are you sure you want to exit? All items in order will be cleared. (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
             if not confirmation in ("yes", "y"):
                 return
 
@@ -63,7 +63,7 @@ class Order():
             print("Your order is empty.")
             return
 
-        confirmation = input("Are you sure you want to clear your order? (type yes to confirm, anything else to cancel): ").lower()
+        confirmation = input("Are you sure you want to clear your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
         if confirmation in ("yes", "y"):
             self.order.clear()
             print("Your order has been cleared.")
