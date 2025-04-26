@@ -21,7 +21,7 @@ def validate_name(name):
 def validate_phone(phone):
     pattern = r"\d{8,10}"
 
-    if phone.isspace() or not re.fullmatch(pattern, phone):
+    if not re.fullmatch(pattern, phone):
         return False
 
     return True
