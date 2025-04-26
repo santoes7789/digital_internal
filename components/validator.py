@@ -19,7 +19,7 @@ def validate_name(name):
     return True 
 
 def validate_phone(phone):
-    pattern = r"\d{8-10}"
+    pattern = r"\d{8,10}"
 
     if phone.isspace() or not re.fullmatch(pattern, phone):
         return False
