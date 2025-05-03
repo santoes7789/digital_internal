@@ -21,7 +21,7 @@ customer_details = {}
 
 while True:
     user_input = input("Enter your address: ")
-    if validator.validate_phone(user_input):
+    if validator.validate_address(user_input):
         customer_details["address"] = user_input
         break
     else:
