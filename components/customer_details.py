@@ -1,4 +1,6 @@
 import validator
+import menu
+
 pickup_method = "delivery"
 
 customer_details = {}
@@ -14,5 +16,16 @@ customer_details["phone"] = get_valid_input("Enter your phone number: ", validat
 if pickup_method == "delivery":
     customer_details["address"] = get_valid_input("Enter your address: ", validator.validate_address)
 
-print("Customer Details:")  
-print(customer_details)
+# convert customer details to a list of dictionaries for table display
+table_data = []
+for key, value in customer_details.items():
+    table_data.append({"Field": key.capitalize() + ":", "Value": value})
+
+# create a table object
+table = menu.Table(
+    headers=["Your Details:", ""],
+    widths=[10, 30],
+    keys=["Field", "Value"])
+
+# print the table with customer details
+table.print(table_data)
