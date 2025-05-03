@@ -126,6 +126,8 @@ class Order():
         print("To order a pie, please enter the index number of the pie you want.")
         print("You can also type in commands for more options.")
         self.show_help()
+        
+        self.done = False
 
         while not self.done:
             # Get user input
@@ -165,5 +167,3 @@ class Order():
                         self.order.append(pies[order])
                     else:
                         print("Invalid index. Please try again.")
-user_order = Order()
-user_order.get_order()
