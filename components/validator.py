@@ -13,15 +13,25 @@ def validate_name(name):
     allowed_chars = r"[a-zA-Z-' ]+"
 
     # Check if the name is empty or contains only allowed characters
-    if name.isspace() or not re.fullmatch(allowed_chars, name):
-        return False
+    if name.strip() and re.fullmatch(allowed_chars, name):
+        return True 
 
-    return True 
+    return False
 
 def validate_phone(phone):
     pattern = r"\d{8,10}"
 
-    if not re.fullmatch(pattern, phone):
-        return False
+    if re.fullmatch(pattern, phone):
+        return True
+    return False
 
-    return True
+
+def validate_address(address):
+    # Allow only letters, numbers, spaces, and common address symbols
+    allowed_chars = r"[a-zA-Z0-9\s.,#-]+"
+
+    # Check if the address is empty or contains only allowed characters
+    if address.strip() and re.fullmatch(allowed_chars, address):
+        return True 
+
+    return False
