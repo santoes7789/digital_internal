@@ -16,6 +16,7 @@ def validate_name(name):
     if name.strip() and re.fullmatch(allowed_chars, name):
         return True 
 
+    print("Invalid name. A valid name should not include numbers or special characters.")
     return False
 
 def validate_phone(phone):
@@ -23,6 +24,8 @@ def validate_phone(phone):
 
     if re.fullmatch(pattern, phone):
         return True
+
+    print("Invalid phone number. A phone number should consist of 8-10 digits.")
     return False
 
 
@@ -34,4 +37,5 @@ def validate_address(address):
     if address.strip() and re.fullmatch(allowed_chars, address):
         return True 
 
+    print("Invalid address. Please input a valid address.")
     return False
