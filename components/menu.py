@@ -16,28 +16,47 @@ pies = [
     {"name": "Butter Chicken Pie", "price": 7}
 ]
 
-column_headers = ["Index", "Pie Name", "Price ($)"]
-column_widths = [8, 23, 7]
+class Table():
+    index_column_width = 8
+    def __init__(self, headers, widths, keys, alignments=None, formats=None, index=False):
+        self.headers = headers
+        self.widths = widths
+        self.keys = keys
+        self.alignments = alignments if alignments else ["<"] * len(headers)
+        self.formats = formats if formats else [""] * len(headers)
+        self.index = index
 
-def print_table(array, headers, widths):
+    def single_line(self):
+        print("--------------------------------------------")
 
-    # Print header
-    for i in range(len(headers)):
-        print(f"{headers[i]:<{widths[i]}}", end="")
-    print()
-    print("--------------------------------------------")
+    def double_line(self):
+        print("============================================")
 
-    # Print pies
-    for row, item in enumerate(array):
-        if item == RowType.SINGLE_LINE:
-            print("--------------------------------------------")
-        elif item == RowType.DOULBLE_LINE:
-            print("============================================")
-        else:
-            print(f"{item.get("index", row + 1):<{column_widths[0]}}", end="")
-            print(f"{item.get("name", ""):<{column_widths[1]}}", end="")
-            print(f"{item.get("price", ""):<{column_widths[2]}.2f}", end="")
-            print()
+    def print(self, array):
+        # Print header
+        if self.index:
+            print(f"{'Index':<{self.index_column_width}}", end="")
 
-    print("============================================")
+        for i in range(len(self.headers)):
+            print(f"{self.headers[i]:<{self.widths[i]}}", end="")
+        print()
+        self.single_line()
+
+        # Print pies
+        for row, item in enumerate(array):
+            if item == RowType.SINGLE_LINE:
+                self.single_line()
+            elif item == RowType.DOULBLE_LINE:
+                self.double_line()
+            else:
+                if self.index:
+                    print(f"{item.get("index", row + 1):<{self.index_column_width}}", end="")
+                for i, key in enumerate(self.keys):
+                    value = item.get(key, "")
+                    print(f"{value:{self.alignments[i]}{self.widths[i]}{self.formats[i]}}", end="")
+                print()
+
+        self.double_line()
+
+
 

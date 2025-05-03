@@ -14,15 +14,17 @@ pies = [
     {"name": "Butter Chicken Pie", "price": 7}
 ]
 
-column_headers = ["Index", "Pie Name", "Price ($)"]
-column_widths = [8, 23, 7]
 
 class Order():
     def __init__(self):
         self.order = []
         self.done = False
-
-    
+        self.table = menu.Table(headers=["Pie Name", "Price ($)"],
+                                widths=[23, 7],
+                                keys=["name", "price"],
+                                alignments=["<", ">"],
+                                formats=["", ".2f"],
+                                index=True)
 
     # Calculates cost based on order 
     def calculate_cost(self):
@@ -46,7 +48,7 @@ class Order():
 
     # Prints menu
     def print_menu(self):
-        menu.print_table(pies, column_headers, column_widths)
+        self.table.print(pies)
 
     def exit(self):
         if self.order:
@@ -80,7 +82,7 @@ class Order():
         table = self.order.copy()
         table.append(menu.RowType.SINGLE_LINE)  # Add a single line separator
         table.append({"index": "", "name": "Total Cost", "price": self.calculate_cost()})  # Add total cost to the order list
-        menu.print_table(table, column_headers, column_widths)
+        self.table.print(table)
     
     # Removes pie from order
     def remove_pie(self):
@@ -89,7 +91,7 @@ class Order():
             return
 
         print("Your current order:")
-        menu.print_table(self.order, column_headers, column_widths)
+        self.table.print(self.order)
 
         remove_index = input("Enter the index of the pie you want to remove: ")
 
@@ -118,7 +120,7 @@ class Order():
         print("  'exit' or 'e':   Exit the ordering system")
         print("  'help' or 'h':   Show this help message")
 
-    def get(self):
+    def get_order(self):
         print("Here are the available pies:")
         self.print_menu()
         print("To order a pie, please enter the index number of the pie you want.")
@@ -128,6 +130,8 @@ class Order():
         while not self.done:
             # Get user input
             user_input = input("Please enter the index of the pie you want to order (or 'done' to finish): ")
+
+            # lowercase the input for case insensitive matching
             user_input = user_input.lower()
 
             commands = {
@@ -140,6 +144,7 @@ class Order():
                 ("help", "h"): self.show_help
             }
 
+            # Check if input matches any command
             for key, command in commands.items():
                 if user_input in key:
                     command()
@@ -161,4 +166,4 @@ class Order():
                     else:
                         print("Invalid index. Please try again.")
 user_order = Order()
-user_order.get()
+user_order.get_order()
