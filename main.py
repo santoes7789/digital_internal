@@ -103,6 +103,7 @@ class Order():
 
         confirmation = input("Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
 
+        print()
         if confirmation in ("yes", "y"):
             self.done = True
 
@@ -179,14 +180,19 @@ class Order():
         print("  'remove' or 'r': Remove a pie from your order")
         print("  'exit' or 'e':   Exit the ordering system")
         print("  'help' or 'h':   Show this help message")
-
-    def get_order(self):
-        print("Here are the available pies:")
-        self.print_menu()
+        print()
+    
+    def starting_prompt(self):
+        print("Welcome to the pie ordering system!")
+        print("You can order pies from our menu below.")
         print("To order a pie, please enter the index number of the pie you want.")
         print("You can also type in commands for more options.")
+        print()
+        self.print_menu()
+        print()
         self.show_help()
-        
+
+    def get_order(self):
         self.done = False
 
         while not self.done:
@@ -227,6 +233,7 @@ class Order():
                         self.order.append(pies[order])
                     else:
                         print("Invalid index. Please try again.")
+                print()
     
 def get_pickup_method():
     while True:
@@ -240,12 +247,15 @@ def get_pickup_method():
         # Find the user's choice, finding the first match in the list of options
         if choice in ("pickup", "pick up", "pick", "p"):
             print("You have chosen to pick up your order.")
+            print()
             return False
         elif choice in ("delivery", "deliver", "d"):
             print("You have chosen to have your order delivered.")
+            print()
             return True
         else:
             print("Invalid choice.")
+            print()
 
 class Details():
     def __init__(self):
@@ -334,6 +344,8 @@ def confirm(user_order, user_details):
 def main():
     welcome()
     user_order = Order()
+
+    user_order.starting_prompt()
     user_order.get_order()
 
     is_delivery = get_pickup_method()
