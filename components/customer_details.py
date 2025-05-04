@@ -1,31 +1,36 @@
 import validator
 import menu
 
-pickup_method = "delivery"
+class CustomerDetails():
+    def __init__(self):
+        self.name = None
+        self.phone = None
+        self.address = None
 
-customer_details = {}
+        self.table = menu.Table(
+            headers=["Your Details:", ""],
+            widths=[10, 30],
+            keys=["Field", "Value"])
 
-def get_valid_input(prompt, validation_func):
-    while True:
-        user_input = input(prompt)
-        if validation_func(user_input):
-            return user_input
+    def get_valid_input(self, prompt, validation_func):
+        while True:
+            user_input = input(prompt)
+            if validation_func(user_input):
+                return user_input
 
-customer_details["name"] = get_valid_input("Enter your name: ", validator.validate_name)
-customer_details["phone"] = get_valid_input("Enter your phone number: ", validator.validate_phone)  
-if pickup_method == "delivery":
-    customer_details["address"] = get_valid_input("Enter your address: ", validator.validate_address)
+    def print_details(self):
+        table_data = []
+        table_data.append({"Field": "Name:", "Value": self.name})
+        table_data.append({"Field": "Phone:", "Value": self.phone})
 
-# convert customer details to a list of dictionaries for table display
-table_data = []
-for key, value in customer_details.items():
-    table_data.append({"Field": key.capitalize() + ":", "Value": value})
+        if self.address:
+            table_data.append({"Field": "Address:", "Value": self.address})
 
-# create a table object
-table = menu.Table(
-    headers=["Your Details:", ""],
-    widths=[10, 30],
-    keys=["Field", "Value"])
+        # print the table with customer details
+        self.table.print(table_data)
 
-# print the table with customer details
-table.print(table_data)
+    def get_details(self, delivery):
+        self.name = self.get_valid_input("Enter your name: ", validator.validate_name)
+        self.phone = self.get_valid_input("Enter your phone number: ", validator.validate_phone)
+        if delivery:
+            self.address = self.get_valid_input("Enter your address: ", validator.validate_address)
