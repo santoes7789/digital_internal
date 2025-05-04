@@ -39,7 +39,7 @@ class Order():
             print("Your order is empty. Please order before finishing.")
             return
 
-        self.show_order()
+        self.print_order()
 
         confirmation = input("Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
 
@@ -73,7 +73,7 @@ class Order():
             print("Order not cleared.")
 
     # Shows current order
-    def show_order(self):
+    def print_order(self):
         if not self.order:
             print("Your order is empty.")
             return
@@ -141,7 +141,7 @@ class Order():
                 ("exit", "e"): self.exit,
                 ("menu", "m"): self.print_menu,
                 ("clear", "c"): self.clear_order,
-                ("show", "s"): self.show_order,
+                ("show", "s"): self.print_order,
                 ("remove", "r"): self.remove_pie,
                 ("help", "h"): self.show_help
             }
