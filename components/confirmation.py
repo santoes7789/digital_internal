@@ -20,7 +20,7 @@ user_details.address = "123 Main St, Springfield"
 def confirm():
     confirmed = False
     def confirm_order():
-        global confirmed
+        nonlocal confirmed
 
         confirmation = input("Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
         if confirmation in ("yes", "y"):
