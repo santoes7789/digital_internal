@@ -1,6 +1,9 @@
 import re
+from colorama import Fore
 
 # Checks if a given value is an integer
+
+
 def validate_int(value):
     try:
         int(value)
@@ -8,16 +11,18 @@ def validate_int(value):
     except ValueError:
         return False
 
+
 def validate_name(name):
     # Allow only letters, hyphens, spaces, and apostrophes
     allowed_chars = r"[a-zA-Z-' ]+"
 
     # Check if the name is empty or contains only allowed characters
     if name.strip() and re.fullmatch(allowed_chars, name):
-        return True 
+        return True
 
-    print("Invalid name. A valid name should not include numbers or special characters.")
+    print(Fore.RED + "Invalid name. A valid name should not include numbers or special characters.")
     return False
+
 
 def validate_phone(phone):
     pattern = r"\d{8,10}"
@@ -25,7 +30,7 @@ def validate_phone(phone):
     if re.fullmatch(pattern, phone):
         return True
 
-    print("Invalid phone number. A phone number should consist of 8-10 digits.")
+    print(Fore.RED + "Invalid phone number. A phone number should consist of 8-10 digits.")
     return False
 
 
@@ -35,7 +40,7 @@ def validate_address(address):
 
     # Check if the address is empty or contains only allowed characters
     if address.strip() and re.fullmatch(allowed_chars, address):
-        return True 
+        return True
 
-    print("Invalid address. Please input a valid address.")
+    print(Fore.RED + "Invalid address. Please input a valid address.")
     return False
