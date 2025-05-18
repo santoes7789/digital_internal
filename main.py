@@ -2,7 +2,7 @@ import random
 import validator
 from enum import Enum
 import time
-from colorama import Fore, Back, Style, init
+from colorama import Fore, Back, Style, init, Cursor
 
 init(autoreset=True)
 
@@ -44,28 +44,35 @@ class Table():
         SINGLE_LINE = 1
         DOULBLE_LINE = 2
 
-    def __init__(self, headers, widths, keys, alignments=None, formats=None, index=False):
+    def __init__(self, headers, widths, keys, alignments=None, formats=None, index=False, x_offset=0, y_offset=0):
         self.headers = headers
         self.widths = widths
         self.keys = keys
         self.alignments = alignments if alignments else ["<"] * len(headers)
         self.formats = formats if formats else [""] * len(headers)
         self.index = index
+        self.x_offset = x_offset
+        self.y_offset = y_offset
 
     def single_line(self):
-        print("--------------------------------------------")
+        print(Cursor.FORWARD(self.x_offset) +
+              "--------------------------------------------")
 
     def double_line(self):
-        print("============================================")
+        print(Cursor.FORWARD(self.x_offset) +
+              "============================================")
 
     def print(self, array):
+        print(Cursor.UP(self.y_offset))
         # Print header
+        print(Cursor.FORWARD(self.x_offset), end="")
         if self.index:
             print(f"{'Index':<{self.index_column_width}}", end="")
 
         for i in range(len(self.headers)):
             print(f"{self.headers[i]:<{self.widths[i]}}", end="")
         print()
+
         self.single_line()
 
         # Print pies
@@ -75,9 +82,9 @@ class Table():
             elif item == Table.RowType.DOULBLE_LINE:
                 self.double_line()
             else:
+                print(Cursor.FORWARD(self.x_offset), end="")
                 if self.index:
-                    print(f"{item.get("index", row + 1)
-                          :<{self.index_column_width}}", end="")
+                    print(f"{item.get("index", row + 1):<{self.index_column_width}}", end="")
                 for i, key in enumerate(self.keys):
                     value = item.get(key, "")
                     print(f"{value:{self.alignments[i]}{
@@ -96,7 +103,8 @@ class Order():
                            keys=["name", "price"],
                            alignments=["<", ">"],
                            formats=["", ".2f"],
-                           index=True)
+                           index=True,
+                           x_offset=0)
 
     # Calculates cost based on order
     def calculate_cost(self):
@@ -268,7 +276,7 @@ def get_pickup_method():
     while True:
         print("Would you like to pick up your order or have it delivered?")
         print("Input 'pickup' or 'p' for Pick up")
-        print("Input 'delivery' or 'd' for Delivery")
+        print("Input 'delivery' or 'd' for Delivery (Costs an additional $14)")
 
         # Prompt user for input, case insensitive
         choice = input("Enter your choice: ").lower()
