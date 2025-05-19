@@ -44,7 +44,9 @@ class Table():
         SINGLE_LINE = 1
         DOULBLE_LINE = 2
 
-    def __init__(self, headers, widths, keys, alignments=None, formats=None, index=False, x_offset=0, y_offset=0):
+    def __init__(self, headers, widths, keys,
+                 alignments=None, formats=None, index=False, x_offset=0, y_offset=0):
+
         self.headers = headers
         self.widths = widths
         self.keys = keys
@@ -63,9 +65,10 @@ class Table():
               "============================================")
 
     def print(self, array):
-        print(Cursor.UP(self.y_offset))
-        # Print header
+        print(Cursor.UP(self.y_offset), end="")
         print(Cursor.FORWARD(self.x_offset), end="")
+
+        # Print header
         if self.index:
             print(f"{'Index':<{self.index_column_width}}", end="")
 
@@ -84,7 +87,8 @@ class Table():
             else:
                 print(Cursor.FORWARD(self.x_offset), end="")
                 if self.index:
-                    print(f"{item.get("index", row + 1):<{self.index_column_width}}", end="")
+                    print(f"{item.get("index", row + 1)
+                          :<{self.index_column_width}}", end="")
                 for i, key in enumerate(self.keys):
                     value = item.get(key, "")
                     print(f"{value:{self.alignments[i]}{
@@ -92,6 +96,12 @@ class Table():
                 print()
 
         self.double_line()
+
+        table_height = len(array) + 3
+
+        if table_height < self.y_offset:
+            print(Cursor.DOWN(self.y_offset - table_height))
+        return table_height
 
 
 class Order():
@@ -103,8 +113,7 @@ class Order():
                            keys=["name", "price"],
                            alignments=["<", ">"],
                            formats=["", ".2f"],
-                           index=True,
-                           x_offset=0)
+                           index=True)
 
     # Calculates cost based on order
     def calculate_cost(self):
@@ -121,6 +130,8 @@ class Order():
 
         self.print_order()
 
+        print()
+
         confirmation = input(
             "Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
 
@@ -134,7 +145,7 @@ class Order():
 
     def print_menu(self):
         print(Fore.BLUE + "Menu:")
-        self.table.print(pies)
+        return self.table.print(pies)
 
     def exit(self):
         if self.order:
@@ -166,14 +177,13 @@ class Order():
             print(Fore.RED + "Your order is empty.")
             return
 
-        print()
         print(Fore.BLUE + "Your current order:")
         table = self.order.copy()
         table.append(Table.RowType.SINGLE_LINE)  # Add a single line separator
         # Add total cost to the order list
         table.append({"index": "", "name": "Total Cost",
                      "price": self.calculate_cost()})
-        self.table.print(table)
+        return self.table.print(table)
 
     # Removes pie from order
     def remove_pie(self):
@@ -211,7 +221,6 @@ class Order():
         print("  'remove' or 'r': Remove a pie from your order")
         print("  'exit' or 'e':   Exit the ordering system")
         print("  'help' or 'h':   Show this help message")
-        print()
 
     def starting_prompt(self):
         print("You can order pies from our menu below.")
@@ -284,15 +293,12 @@ def get_pickup_method():
         # Find the user's choice, finding the first match in the list of options
         if choice in ("pickup", "pick up", "pick", "p"):
             print(Fore.GREEN + "You have chosen to pick up your order.")
-            print()
             return False
         elif choice in ("delivery", "deliver", "d"):
             print(Fore.GREEN + "You have chosen to have your order delivered.")
-            print()
             return True
         else:
             print(Fore.RED + "Invalid choice.")
-            print()
 
 
 class Details():
@@ -321,7 +327,7 @@ class Details():
             table_data.append({"Field": "Address:", "Value": self.address})
 
         # print the table with customer details
-        self.table.print(table_data)
+        return self.table.print(table_data)
 
     def get_details(self, delivery):
         print(Style.BRIGHT + "CUSTOMER DETAILS")
@@ -367,18 +373,24 @@ def confirm(user_order, user_details):
         print("  'order' or 'o':   Edit the order")
         print("  'details' or 'd': Edit my details")
 
+    def print_all():
+        table_height = user_order.print_order()
+        user_details.table.x_offset = 60
+        user_details.table.y_offset = table_height
+        user_details.print_details()
+
     commands = {
         ("abort", "a"): abort,
         ("confirm", "c"): confirm_order,
-        ("order", "o"): edit_order,
+        ("order", "o"): print_all,
         ("details", "d"): edit_details,
     }
 
     print(Style.BRIGHT + "CONFIRMING YOUR ORDER")
     print("Just before we send your order, please check that all your details and order are correct.")
+    print_all()
 
     while not confirmed:
-        print()
         print("Type in a command for any action you want to take.")
         help()
 
