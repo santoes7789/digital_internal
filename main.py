@@ -56,17 +56,25 @@ class Table():
         self.x_offset = x_offset
         self.y_offset = y_offset
 
+    def offset_x(self):
+        if self.x_offset:
+            print(Cursor.FORWARD(self.x_offset), end="")
+    def offset_y(self):
+        if self.y_offset:
+            print(Cursor.UP(self.y_offset), end="")
+
+
     def single_line(self):
-        print(Cursor.FORWARD(self.x_offset) +
-              "--------------------------------------------")
+        self.offset_x()
+        print("--------------------------------------------")
 
     def double_line(self):
-        print(Cursor.FORWARD(self.x_offset) +
-              "============================================")
+        self.offset_x()
+        print("============================================")
 
     def print(self, array):
-        print(Cursor.UP(self.y_offset), end="")
-        print(Cursor.FORWARD(self.x_offset), end="")
+        self.offset_x()
+        self.offset_y()
 
         # Print header
         if self.index:
@@ -85,7 +93,7 @@ class Table():
             elif item == Table.RowType.DOULBLE_LINE:
                 self.double_line()
             else:
-                print(Cursor.FORWARD(self.x_offset), end="")
+                self.offset_x()
                 if self.index:
                     print(f"{item.get("index", row + 1)
                           :<{self.index_column_width}}", end="")
@@ -382,7 +390,7 @@ def confirm(user_order, user_details):
     commands = {
         ("abort", "a"): abort,
         ("confirm", "c"): confirm_order,
-        ("order", "o"): print_all,
+        ("order", "o"): edit_order,
         ("details", "d"): edit_details,
     }
 
