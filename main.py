@@ -1,10 +1,9 @@
 import random
 import validator
 from enum import Enum
-import time
-from colorama import Fore, Back, Style, init, Cursor
+from colorama import Style 
+import utils
 
-init(autoreset=True)
 
 # Bot names for the ordering system
 bot_names = ["Alice", "Bob", "Charlie", "Daisy",
@@ -36,87 +35,11 @@ def welcome():
           bot_name}".center(banner_width))
     print("=" * banner_width)
 
-
-class Table():
-    index_column_width = 8
-
-    class RowType(Enum):
-        SINGLE_LINE = 1
-        DOULBLE_LINE = 2
-
-    def __init__(self, headers, widths, keys,
-                 alignments=None, formats=None, index=False, x_offset=0, y_offset=0):
-
-        self.headers = headers
-        self.widths = widths
-        self.keys = keys
-        self.alignments = alignments if alignments else ["<"] * len(headers)
-        self.formats = formats if formats else [""] * len(headers)
-        self.index = index
-        self.x_offset = x_offset
-        self.y_offset = y_offset
-
-    def offset_x(self):
-        if self.x_offset:
-            print(Cursor.FORWARD(self.x_offset), end="")
-    def offset_y(self):
-        if self.y_offset:
-            print(Cursor.UP(self.y_offset), end="")
-
-
-    def single_line(self):
-        self.offset_x()
-        print("--------------------------------------------")
-
-    def double_line(self):
-        self.offset_x()
-        print("============================================")
-
-    def print(self, array):
-        self.offset_x()
-        self.offset_y()
-
-        # Print header
-        if self.index:
-            print(f"{'Index':<{self.index_column_width}}", end="")
-
-        for i in range(len(self.headers)):
-            print(f"{self.headers[i]:<{self.widths[i]}}", end="")
-        print()
-
-        self.single_line()
-
-        # Print pies
-        for row, item in enumerate(array):
-            if item == Table.RowType.SINGLE_LINE:
-                self.single_line()
-            elif item == Table.RowType.DOULBLE_LINE:
-                self.double_line()
-            else:
-                self.offset_x()
-                if self.index:
-                    print(f"{item.get("index", row + 1)
-                          :<{self.index_column_width}}", end="")
-                for i, key in enumerate(self.keys):
-                    value = item.get(key, "")
-                    print(f"{value:{self.alignments[i]}{
-                          self.widths[i]}{self.formats[i]}}", end="")
-                print()
-
-        self.double_line()
-
-        table_height = len(array) + 3
-
-        if table_height < self.y_offset:
-            print(Cursor.DOWN(self.y_offset - table_height))
-        return table_height
-
-
 class Order():
     def __init__(self):
         self.order = []
         self.done = False
-        self.table = Table(headers=["Pie Name", "Price ($)"],
+        self.table = utils.Table(headers=["Pie Name", "Price ($)"],
                            widths=[23, 7],
                            keys=["name", "price"],
                            alignments=["<", ">"],
@@ -133,7 +56,7 @@ class Order():
     # Finish ordering
     def finish(self):
         if not self.order:
-            print(Fore.RED + "Your order is empty. Please order before finishing.")
+            utils.print_error("Your order is empty. Please order before finishing.")
             return
 
         self.print_order()
@@ -144,15 +67,15 @@ class Order():
             "Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
 
         if confirmation in ("yes", "y"):
-            print(Fore.GREEN + "You have confirmed your order")
+            utils.print_success("Your order has been finished.")
             self.done = True
             return
-        print(Fore.RED + "Order confirmation has been cancelled")
+        utils.print_error("Order confirmation has been cancelled.")
 
     # Prints menu
 
     def print_menu(self):
-        print(Fore.BLUE + "Menu:")
+        utils.print_header("MENU:")
         return self.table.print(pies)
 
     def exit(self):
@@ -168,45 +91,45 @@ class Order():
     # Clears order asks for confirmation before doing so
     def clear_order(self):
         if not self.order:
-            print(Fore.RED + "Your order is empty.")
+            utils.print_error("Your order is empty. Nothing to clear.")
             return
 
         confirmation = input(
             "Are you sure you want to clear your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
         if confirmation in ("yes", "y"):
             self.order.clear()
-            print(Fore.GREEN + "Your order has been cleared.")
+            utils.print_success("Your order has been cleared.")
         else:
-            print(Fore.RED + "Order not cleared.")
+            utils.print_error("Order has been not been cleared.")
 
     # Shows current order
     def print_order(self):
         if not self.order:
-            print(Fore.RED + "Your order is empty.")
+            utils.print_error("Your order is empty.")
             return
 
-        print(Fore.BLUE + "Your current order:")
+        utils.print_header("Your current order:")
         table = self.order.copy()
-        table.append(Table.RowType.SINGLE_LINE)  # Add a single line separator
+        table.append(utils.Table.RowType.SINGLE_LINE)  # Add a single line separator
         # Add total cost to the order list
-        table.append({"index": "", "name": "Total Cost",
+        table.append({"index": "", "name": "Order Cost",
                      "price": self.calculate_cost()})
         return self.table.print(table)
 
     # Removes pie from order
     def remove_pie(self):
         if not self.order:
-            print(Fore.RED + "Your order is empty. Nothing to remove.")
+            utils.print_error("Your order is empty. Nothing to remove.")
             return
 
-        print("Your current order:")
+        utils.print_header("Your current order:")
         self.table.print(self.order)
 
         remove_index = input("Enter the index of the pie you want to remove: ")
 
         # Checks if input is an integer
         if not validator.validate_int(remove_index):
-            print(Fore.RED + "Invalid input. No item removed.")
+            utils.print_error("Invalid input. No item removed.")
             return
 
         # Convert to 0-based index
@@ -215,10 +138,9 @@ class Order():
         # Remove pie from order
         if 0 <= remove_index < len(self.order):
             removed_pie = self.order.pop(remove_index)
-            print(Fore.GREEN +
-                  f"Removed {removed_pie['name']} from your order.")
+            utils.print_success(f"Removed {removed_pie['name']} from your order.")
         else:
-            print(Fore.RED + "Invalid index. No item removed.")
+            utils.print_error("Invalid index. No item removed.")
 
     def show_help(self):
         print("Available commands:")
@@ -231,6 +153,7 @@ class Order():
         print("  'help' or 'h':   Show this help message")
 
     def starting_prompt(self):
+        utils.print_title("ORDERING SYSTEM")
         print("You can order pies from our menu below.")
         print("To order a pie, please enter the index number of the pie you want.")
         print()
@@ -241,6 +164,7 @@ class Order():
         self.show_help()
 
     def get_order(self):
+        self.starting_prompt()
         self.done = False
 
         while not self.done:
@@ -271,8 +195,7 @@ class Order():
             # Check if input is an integer, for ordering a pie
             else:
                 if not validator.validate_int(user_input):
-                    print(
-                        Fore.RED + "Invalid input. Please enter a valid index or a command.")
+                    utils.print_error("Ivalid input. Please enter a valid index or a command.")
 
                 # Add pie based on index
                 else:
@@ -280,33 +203,33 @@ class Order():
                     order = int(user_input) - 1
 
                     if 0 <= order < len(pies):
-                        print(Fore.GREEN +
-                              f"You have ordered {pies[order]['name']} for ${
-                                  pies[order]['price']:.2f}.")
+                        utils.print_success(
+                            f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
                         self.order.append(pies[order])
                     else:
-                        print(Fore.RED + "Invalid index. Please try again.")
+                        utils.print_error(
+                            "Invalid index. Please enter a valid index from the menu.")
 
 
 def get_pickup_method():
-    print(Style.BRIGHT + "PICKUP METHOD")
+    utils.print_title("PICKUP METHOD")
     while True:
         print("Would you like to pick up your order or have it delivered?")
         print("Input 'pickup' or 'p' for Pick up")
-        print("Input 'delivery' or 'd' for Delivery (Costs an additional $14)")
+        print("Input 'delivery' or 'd' for Delivery " + Style.BRIGHT + "(Costs an additional $14)")
 
         # Prompt user for input, case insensitive
         choice = input("Enter your choice: ").lower()
 
         # Find the user's choice, finding the first match in the list of options
         if choice in ("pickup", "pick up", "pick", "p"):
-            print(Fore.GREEN + "You have chosen to pick up your order.")
+            utils.print_success("You have chosen to pick up your order.")
             return False
         elif choice in ("delivery", "deliver", "d"):
-            print(Fore.GREEN + "You have chosen to have your order delivered.")
+            utils.print_success("You have chosen to have your order delivered.")
             return True
         else:
-            print(Fore.RED + "Invalid choice.")
+            utils.print_error("Invalid choice. Please enter 'pickup' for Pick up, or 'delivery' for Delivery.")
 
 
 class Details():
@@ -315,7 +238,7 @@ class Details():
         self.phone = None
         self.address = None
 
-        self.table = Table(
+        self.table = utils.Table(
             headers=["Your Details:", ""],
             widths=[10, 30],
             keys=["Field", "Value"])
@@ -338,7 +261,7 @@ class Details():
         return self.table.print(table_data)
 
     def get_details(self, delivery):
-        print(Style.BRIGHT + "CUSTOMER DETAILS")
+        utils.print_title("CUSTOMER DETAILS")
         self.name = self.get_valid_input(
             "Enter your name: ", validator.validate_name)
         self.phone = self.get_valid_input(
@@ -348,7 +271,7 @@ class Details():
                 "Enter your address: ", validator.validate_address)
 
 
-def confirm(user_order, user_details):
+def confirm(user_order, user_details, delivery):
     confirmed = False
 
     def confirm_order():
@@ -357,22 +280,22 @@ def confirm(user_order, user_details):
         confirmation = input(
             "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
         if confirmation in ("yes", "y"):
-            print(Fore.GREEN + "Order confirmed!")
+            utils.print_success("Your order has been confirmed!")
             confirmed = True
 
     def abort():
-        print(Fore.GREEN + "Order cancelled. Goodbye!")
+        utils.print_error("Order cancelled. Goodbye!")
         exit()
 
     def edit_order():
         print("Editing order...")
         user_order.get_order()
-        print(Fore.GREEN + "Order updated!")
+        utils.print_success("Order updated!")
 
     def edit_details():
         print("Editing details...")
         user_details.get_details(delivery=True)
-        print(Fore.GREEN + "Details updated!")
+        utils.print_success("Details updated!")
 
     def help():
         print("Available commands:")
@@ -386,6 +309,13 @@ def confirm(user_order, user_details):
         user_details.table.x_offset = 60
         user_details.table.y_offset = table_height
         user_details.print_details()
+        if delivery:
+            print("Delivery method: Delivery")
+        else:
+            print("Delivery method: Pickup")
+
+        total = user_order.calculate_cost() + (14 if delivery else 0)
+        print(f"Total cost: ${total:.2f}")
 
     commands = {
         ("abort", "a"): abort,
@@ -394,11 +324,13 @@ def confirm(user_order, user_details):
         ("details", "d"): edit_details,
     }
 
-    print(Style.BRIGHT + "CONFIRMING YOUR ORDER")
+    utils.print_title("CONFIRMATION")
     print("Just before we send your order, please check that all your details and order are correct.")
-    print_all()
 
     while not confirmed:
+        print_all()
+
+        print("If everything looks good, please confirm your order by entering 'confirm'.\n")
         print("Type in a command for any action you want to take.")
         help()
 
@@ -408,29 +340,42 @@ def confirm(user_order, user_details):
                 command()
                 break
         else:
-            print(Fore.RED + "Invalid command. Please try again.")
+            utils.print_error("Invalid command. Please try again.")
 
 
 def main():
     welcome()
-    time.sleep(1)
 
     # Getting user order
     # Creates order class
-    # prints out starting prompt
     # Then asks user for their order
     user_order = Order()
-    user_order.starting_prompt()
     user_order.get_order()
 
+
+    # Single line separator before moving to next section
     print()
+
+    # Getting pickup method by calling the function
     is_delivery = get_pickup_method()
 
+    # Single line separator before moving to next section
+    print()
+    
+    # Getting user details
+    # Creates details class
+    # Then asks user for their details
+    # If delivery is selected, asks for address
     user_details = Details()
     user_details.get_details(is_delivery)
 
+    # Single line separator before moving to next section
     print()
-    confirm(user_order, user_details)
+
+    # Confirmation
+    # Calls the confirmation function
+    # Passes the order and details to the function
+    confirm(user_order, user_details, is_delivery)
 
 
 main()
