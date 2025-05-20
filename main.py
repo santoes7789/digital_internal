@@ -39,12 +39,14 @@ class Order():
     def __init__(self):
         self.order = []
         self.done = False
-        self.table = utils.Table(headers=["Pie Name", "Price ($)"],
+        self.table = utils.Table(
+                           headers=["Pie Name", "Price ($)"],
                            widths=[23, 7],
                            keys=["name", "price"],
                            alignments=["<", ">"],
                            formats=["", ".2f"],
-                           index=True)
+                           index=True
+                           )
 
     # Calculates cost based on order
     def calculate_cost(self):
@@ -143,14 +145,33 @@ class Order():
             utils.print_error("Invalid index. No item removed.")
 
     def show_help(self):
-        print("Available commands:")
-        print("  'menu' or 'm':   Show the menu")
-        print("  'done' or 'd':   Finish ordering")
-        print("  'clear' or 'c':  Clear your order")
-        print("  'show' or 's':   Show your current order")
-        print("  'remove' or 'r': Remove a pie from your order")
-        print("  'exit' or 'e':   Exit the ordering system")
-        print("  'help' or 'h':   Show this help message")
+        table = utils.Table(
+            headers=["Available commands:", ""],
+            widths=[20, 30],
+            keys=["command", "description"])
+
+        table.x_offset = 50
+        table.y_offset = 13
+
+        commands = [
+            {"command": "'menu' or 'm':", "description": "Show the menu"},
+            {"command": "'done' or 'd':", "description": "Finish ordering"},
+            {"command": "'clear' or 'c':", "description": "Clear your order"},
+            {"command": "'show' or 's':", "description": "Show your current order"},
+            {"command": "'remove' or 'r':", "description": "Remove a pie from your order"},
+            {"command": "'exit' or 'e':", "description": "Exit the ordering system"},
+            {"command": "'help' or 'h':", "description": "Show this help message"}
+        ]
+
+        table.print(commands)
+        
+        # print("  'menu' or 'm':   Show the menu")
+        # print("  'done' or 'd':   Finish ordering")
+        # print("  'clear' or 'c':  Clear your order")
+        # print("  'show' or 's':   Show your current order")
+        # print("  'remove' or 'r': Remove a pie from your order")
+        # print("  'exit' or 'e':   Exit the ordering system")
+        # print("  'help' or 'h':   Show this help message")
 
     def starting_prompt(self):
         utils.print_title("ORDERING SYSTEM")
@@ -160,7 +181,6 @@ class Order():
         print("You can also type in commands for more options.")
         print()
         self.print_menu()
-        print()
         self.show_help()
 
     def get_order(self):
@@ -299,10 +319,25 @@ def confirm(user_order, user_details, delivery):
 
     def help():
         print("Available commands:")
-        print("  'confirm' or 'c': Confirm the order")
-        print("  'abort' or 'a':   Abort/cancel the order")
-        print("  'order' or 'o':   Edit the order")
-        print("  'details' or 'd': Edit my details")
+        table = utils.Table(
+            headers=["", ""],
+            widths=[20, 30],
+            keys=["command", "description"],
+        )
+
+        commands = [
+            {"command": "'confirm' or 'c'", "description": "Confirm the order"},
+            {"command": "'abort' or 'a'", "description": "Abort/cancel the order"},
+            {"command": "'order' or 'o'", "description": "Edit the order"},
+            {"command": "'details' or 'd'", "description": "Edit my details"},
+        ]
+        
+        table.print(commands)
+
+        # print("  'confirm' or 'c': Confirm the order")
+        # print("  'abort' or 'a':   Abort/cancel the order")
+        # print("  'order' or 'o':   Edit the order")
+        # print("  'details' or 'd': Edit my details")
 
     def print_all():
         table_height = user_order.print_order()

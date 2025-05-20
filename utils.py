@@ -28,8 +28,8 @@ class Table():
         self.headers = headers
         self.widths = widths
         self.keys = keys
-        self.alignments = alignments if alignments else ["<"] * len(headers)
-        self.formats = formats if formats else [""] * len(headers)
+        self.alignments = alignments if alignments else ["<"] * len(keys)
+        self.formats = formats if formats else [""] * len(keys)
         self.index = index
         self.x_offset = x_offset
         self.y_offset = y_offset
@@ -51,16 +51,17 @@ class Table():
         print("============================================")
 
     def print(self, array):
-        self.offset_x()
         self.offset_y()
 
         # Print header
-        if self.index:
-            print(f"{'Index':<{self.index_column_width}}", end="")
+        if self.headers:
+            self.offset_x()
+            if self.index:
+                print(f"{'Index':<{self.index_column_width}}", end="")
 
-        for i in range(len(self.headers)):
-            print(f"{self.headers[i]:<{self.widths[i]}}", end="")
-        print()
+            for i in range(len(self.headers)):
+                print(f"{self.headers[i]:<{self.widths[i]}}", end="")
+            print()
 
         self.single_line()
 
