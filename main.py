@@ -36,6 +36,21 @@ def welcome():
     print("=" * banner_width)
 
 class Order():
+    commands = [
+        {"command": "'menu' or 'm':", "description": "Show the menu"},
+        {"command": "'done' or 'd':", "description": "Finish ordering"},
+        {"command": "'clear' or 'c':", "description": "Clear your order"},
+        {"command": "'show' or 's':", "description": "Show your current order"},
+        {"command": "'remove' or 'r':", "description": "Remove a pie from your order"},
+        {"command": "'exit' or 'e':", "description": "Exit the ordering system"},
+        {"command": "'help' or 'h':", "description": "Show this help message"}
+    ]
+
+    command_table = utils.Table(
+        headers=["Available commands:", ""], 
+        widths=[20, 30], 
+        keys=["command", "description"])
+
     def __init__(self):
         self.order = []
         self.done = False
@@ -145,43 +160,30 @@ class Order():
             utils.print_error("Invalid index. No item removed.")
 
     def show_help(self):
-        table = utils.Table(
-            headers=["Available commands:", ""],
-            widths=[20, 30],
-            keys=["command", "description"])
-
-        table.x_offset = 50
-        table.y_offset = 13
-
-        commands = [
-            {"command": "'menu' or 'm':", "description": "Show the menu"},
-            {"command": "'done' or 'd':", "description": "Finish ordering"},
-            {"command": "'clear' or 'c':", "description": "Clear your order"},
-            {"command": "'show' or 's':", "description": "Show your current order"},
-            {"command": "'remove' or 'r':", "description": "Remove a pie from your order"},
-            {"command": "'exit' or 'e':", "description": "Exit the ordering system"},
-            {"command": "'help' or 'h':", "description": "Show this help message"}
-        ]
-
-        table.print(commands)
+        self.command_table.print(self.commands)
         
-        # print("  'menu' or 'm':   Show the menu")
-        # print("  'done' or 'd':   Finish ordering")
-        # print("  'clear' or 'c':  Clear your order")
-        # print("  'show' or 's':   Show your current order")
-        # print("  'remove' or 'r': Remove a pie from your order")
-        # print("  'exit' or 'e':   Exit the ordering system")
-        # print("  'help' or 'h':   Show this help message")
-
     def starting_prompt(self):
-        utils.print_title("ORDERING SYSTEM")
+        utils.print_title("ORDERING SYSTEM") # Prints title 
         print("You can order pies from our menu below.")
         print("To order a pie, please enter the index number of the pie you want.")
         print()
         print("You can also type in commands for more options.")
         print()
-        self.print_menu()
+
+        self.print_menu() # Prints menu
+
+        # Offset the command table to put it on the right of the menu
+        # x_offset is set to 50 to move it right
+        # y_offset is set to 13 to move it up 
+        self.command_table.x_offset = 50
+        self.command_table.y_offset = 13
+
+        # Print the command table
         self.show_help()
+
+        # Reset the offsets to 0 for the next print
+        self.command_table.x_offset = 0
+        self.command_table.y_offset = 0
 
     def get_order(self):
         self.starting_prompt()
