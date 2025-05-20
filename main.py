@@ -325,24 +325,33 @@ def confirm(user_order, user_details, delivery):
 
     def edit_order():
         print("Editing order...")
+        print()
         user_order.get_order()
         utils.print_success("Order updated!")
+        print()
+        print_all()
 
     def edit_details():
         print("Editing details...")
+        print()
         user_details.get_details(delivery=True)
         utils.print_success("Details updated!")
+        print()
+        print_all()
     
     def edit_pickup_method():
         nonlocal delivery
 
         print("Editing pickup method...")
+        print()
         delivery = get_pickup_method()
         if delivery and not user_details.address:
             user_details.address = user_details.get_valid_input(
                 "Enter your address: ", validator.validate_address)
 
         utils.print_success("Pickup method updated!")
+        print()
+        print_all()
 
     def help():
         commands_table.print(commands)
