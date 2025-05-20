@@ -198,7 +198,7 @@ class Order():
             # lowercase the input for case insensitive matching
             user_input = user_input.lower()
 
-            commands = {
+            command_map = {
                 ("done", "d"): self.finish,
                 ("exit", "e"): self.exit,
                 ("menu", "m"): self.print_menu,
@@ -209,7 +209,7 @@ class Order():
             }
 
             # Check if input matches any command
-            for key, command in commands.items():
+            for key, command in command_map.items():
                 if user_input in key:
                     command()
                     break
@@ -296,6 +296,26 @@ class Details():
 def confirm(user_order, user_details, delivery):
     confirmed = False
 
+    commands_table = utils.Table(
+        headers=["Avaliable commands", ""],
+        widths=[20, 30],
+        keys=["command", "description"],
+    )
+
+    commands = [
+        {"command": "'confirm' or 'c':", "description": "Confirm the order"},
+        {"command": "'abort' or 'a':", "description": "Abort/cancel the order"},
+        {"command": "'order' or 'o':", "description": "Edit the order"},
+        {"command": "'details' or 'd':", "description": "Edit my details"},
+    ]
+
+    command_map = {
+        ("abort", "a"): abort,
+        ("confirm", "c"): confirm_order,
+        ("order", "o"): edit_order,
+        ("details", "d"): edit_details,
+    }
+
     def confirm_order():
         nonlocal confirmed
 
@@ -320,26 +340,7 @@ def confirm(user_order, user_details, delivery):
         utils.print_success("Details updated!")
 
     def help():
-        print("Available commands:")
-        table = utils.Table(
-            headers=["", ""],
-            widths=[20, 30],
-            keys=["command", "description"],
-        )
-
-        commands = [
-            {"command": "'confirm' or 'c'", "description": "Confirm the order"},
-            {"command": "'abort' or 'a'", "description": "Abort/cancel the order"},
-            {"command": "'order' or 'o'", "description": "Edit the order"},
-            {"command": "'details' or 'd'", "description": "Edit my details"},
-        ]
-        
-        table.print(commands)
-
-        # print("  'confirm' or 'c': Confirm the order")
-        # print("  'abort' or 'a':   Abort/cancel the order")
-        # print("  'order' or 'o':   Edit the order")
-        # print("  'details' or 'd': Edit my details")
+        commands_table.print(commands)
 
     def print_all():
         table_height = user_order.print_order()
@@ -354,12 +355,6 @@ def confirm(user_order, user_details, delivery):
         total = user_order.calculate_cost() + (14 if delivery else 0)
         print(f"Total cost: ${total:.2f}")
 
-    commands = {
-        ("abort", "a"): abort,
-        ("confirm", "c"): confirm_order,
-        ("order", "o"): edit_order,
-        ("details", "d"): edit_details,
-    }
 
     utils.print_title("CONFIRMATION")
     print("Just before we send your order, please check that all your details and order are correct.")
@@ -372,7 +367,7 @@ def confirm(user_order, user_details, delivery):
         help()
 
         user_input = input("Enter command: ").lower()
-        for key, command in commands.items():
+        for key, command in command_map.items():
             if user_input in key:
                 command()
                 break
