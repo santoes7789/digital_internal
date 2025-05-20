@@ -24,16 +24,28 @@ pies = [
 ]
 
 
+# Prints a welcome message with a random bot name
 def welcome():
     # Randomly select a bot name from the list
     bot_name = random.choice(bot_names)
 
+    # Set the width of the banner
     banner_width = 50
 
-    print("=" * banner_width)
-    print(f"Welcome to best pie shop, my name is {
-          bot_name}".center(banner_width))
-    print("=" * banner_width)
+    # Prints the welcome message
+    # Uses utils.print functions to print with preset styles
+    utils.print_title("=" * banner_width) # Prints ===== with length of banner width
+
+    # Prints welcome message, centered with title style (bolded)
+    utils.print_title(f"Welcome to best pie shop, my name is {bot_name}".center(banner_width)) 
+    
+    print()
+
+    # Prints "Press enter to start!" centered, with header style (blue)
+    utils.print_header("PRESS ENTER TO START ORDERING!".center(banner_width)) 
+    utils.print_title("=" * banner_width)
+
+    input() # Waits for user to press enter before continuing
 
 class Order():
     commands = [
