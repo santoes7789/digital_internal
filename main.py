@@ -308,26 +308,6 @@ class Details():
 def confirm(user_order, user_details, delivery):
     confirmed = False
 
-    commands_table = utils.Table(
-        headers=["Avaliable commands", ""],
-        widths=[20, 30],
-        keys=["command", "description"],
-    )
-
-    commands = [
-        {"command": "'confirm' or 'c':", "description": "Confirm the order"},
-        {"command": "'abort' or 'a':", "description": "Abort/cancel the order"},
-        {"command": "'order' or 'o':", "description": "Edit the order"},
-        {"command": "'details' or 'd':", "description": "Edit my details"},
-    ]
-
-    command_map = {
-        ("abort", "a"): abort,
-        ("confirm", "c"): confirm_order,
-        ("order", "o"): edit_order,
-        ("details", "d"): edit_details,
-    }
-
     def confirm_order():
         nonlocal confirmed
 
@@ -335,6 +315,8 @@ def confirm(user_order, user_details, delivery):
             "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
         if confirmation in ("yes", "y"):
             utils.print_success("Your order has been confirmed!")
+            utils.print_success("Thank you for ordering with us!")
+            utils.print_success("Your order will be ready for pickup or delivery soon.")
             confirmed = True
 
     def abort():
@@ -350,6 +332,17 @@ def confirm(user_order, user_details, delivery):
         print("Editing details...")
         user_details.get_details(delivery=True)
         utils.print_success("Details updated!")
+    
+    def edit_pickup_method():
+        nonlocal delivery
+
+        print("Editing pickup method...")
+        delivery = get_pickup_method()
+        if delivery and not user_details.address:
+            user_details.address = user_details.get_valid_input(
+                "Enter your address: ", validator.validate_address)
+
+        utils.print_success("Pickup method updated!")
 
     def help():
         commands_table.print(commands)
@@ -360,21 +353,45 @@ def confirm(user_order, user_details, delivery):
         user_details.table.y_offset = table_height
         user_details.print_details()
         if delivery:
-            print("Delivery method: Delivery")
+            print("Pickup method:  " + Style.BRIGHT + "Delivery")
         else:
-            print("Delivery method: Pickup")
+            print("Pickup method:  " + Style.BRIGHT + "Pickup")
 
         total = user_order.calculate_cost() + (14 if delivery else 0)
-        print(f"Total cost: ${total:.2f}")
+        print("Total cost:  " + Style.BRIGHT + f"${total:.2f}")
 
+    commands_table = utils.Table(
+        headers=["Avaliable commands", ""],
+        widths=[20, 30],
+        keys=["command", "description"],
+    )
+
+    commands = [
+        {"command": "'confirm' or 'c':", "description": "Confirm the order"},
+        {"command": "'abort' or 'a':", "description": "Abort/cancel the order"},
+        {"command": "'order' or 'o':", "description": "Edit the order"},
+        {"command": "'details' or 'd':", "description": "Edit my details"},
+        {"command": "'method' or 'm':", "description": "Change pickup method"},
+        {"command": "'view' or 'v':", "description": "View order details again"},
+    ]
+
+    command_map = {
+        ("abort", "a"): abort,
+        ("confirm", "c"): confirm_order,
+        ("order", "o"): edit_order,
+        ("details", "d"): edit_details,
+        ("method", "m"): edit_pickup_method,
+        ("view", "v"): print_all,
+    }
 
     utils.print_title("CONFIRMATION")
     print("Just before we send your order, please check that all your details and order are correct.")
+    print_all()
+    print()
+    print("If everything looks good, please confirm your order by entering 'confirm'.")
 
     while not confirmed:
-        print_all()
-
-        print("If everything looks good, please confirm your order by entering 'confirm'.\n")
+        print()
         print("Type in a command for any action you want to take.")
         help()
 
