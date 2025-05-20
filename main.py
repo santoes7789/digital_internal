@@ -334,7 +334,7 @@ def confirm(user_order, user_details, delivery):
     def edit_details():
         print("Editing details...")
         print()
-        user_details.get_details(delivery=True)
+        user_details.get_details(delivery)
         utils.print_success("Details updated!")
         print()
         print_all()
