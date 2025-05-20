@@ -1,11 +1,9 @@
 import random
-import validator
-from enum import Enum
-from colorama import Style 
+from colorama import Style
 import utils
+import validator
 
 # TODO
-# Add a comments
 # Sort order by name
 # Add more pies
 # fucntion for thing i know what im takling abt
@@ -31,6 +29,7 @@ pies = [
 
 
 # Prints a welcome message with a random bot name
+# Also awaits for enter
 def welcome():
     # Randomly select a bot name from the list
     bot_name = random.choice(bot_names)
@@ -40,20 +39,26 @@ def welcome():
 
     # Prints the welcome message
     # Uses utils.print functions to print with preset styles
-    utils.print_title("=" * banner_width) # Prints ===== with length of banner width
+    # Prints ===== with length of banner width
+    utils.print_title("=" * banner_width)
 
     # Prints welcome message, centered with title style (bolded)
-    utils.print_title(f"Welcome to best pie shop, my name is {bot_name}".center(banner_width)) 
-    
+    utils.print_title(f"Welcome to best pie shop, my name is {
+                      bot_name}".center(banner_width))
+
     print()
 
     # Prints "Press enter to start!" centered, with header style (blue)
-    utils.print_header("PRESS ENTER TO START ORDERING!".center(banner_width)) 
+    utils.print_header("PRESS ENTER TO START ORDERING!".center(banner_width))
     utils.print_title("=" * banner_width)
 
-    input() # Waits for user to press enter before continuing
+    input()  # Waits for user to press enter before continuing
 
+
+# Order class for ordering
 class Order():
+
+    # possible commands for order system
     commands = [
         {"command": "'menu' or 'm':", "description": "Show the menu"},
         {"command": "'done' or 'd':", "description": "Finish ordering"},
@@ -64,34 +69,43 @@ class Order():
         {"command": "'help' or 'h':", "description": "Show this help message"}
     ]
 
+    # creating table from commands to be printed
     command_table = utils.Table(
-        headers=["Available commands:", ""], 
-        widths=[20, 30], 
+        headers=["Available commands:", ""],
+        widths=[20, 30],
         keys=["command", "description"])
 
     def __init__(self):
+        # init empty array
         self.order = []
+
+        # set ordering to not done
         self.done = False
+
+        # create table template for order and menu to be printed from
         self.table = utils.Table(
-                           headers=["Pie Name", "Price ($)"],
-                           widths=[23, 7],
-                           keys=["name", "price"],
-                           alignments=["<", ">"],
-                           formats=["", ".2f"],
-                           index=True
-                           )
+            headers=["Pie Name", "Price ($)"],
+            widths=[23, 7],
+            keys=["name", "price"],
+            alignments=["<", ">"],
+            formats=["", ".2f"],
+            index=True
+        )
 
     # Calculates cost based on order
     def calculate_cost(self):
         total_cost = 0
+        # Iterate through each pie to get the price
         for pie in self.order:
             total_cost += pie['price']
         return total_cost
 
     # Finish ordering
     def finish(self):
+        # Check if order is empty or not
         if not self.order:
-            utils.print_error("Your order is empty. Please order before finishing.")
+            utils.print_error(
+                "Your order is empty. Please order before finishing.")
             return
 
         self.print_order()
@@ -108,11 +122,11 @@ class Order():
         utils.print_error("Order confirmation has been cancelled.")
 
     # Prints menu
-
     def print_menu(self):
         utils.print_header("MENU:")
         return self.table.print(pies)
 
+    # Exits the program, asks for confirmation before
     def exit(self):
         if self.order:
             confirmation = input(
@@ -120,8 +134,8 @@ class Order():
             if not confirmation in ("yes", "y"):
                 return
 
-        print("Exiting the ordering system. Goodbye!")
-        self.done = True
+        print("Program exiting. Goodbye!")
+        exit()
 
     # Clears order asks for confirmation before doing so
     def clear_order(self):
@@ -145,7 +159,10 @@ class Order():
 
         utils.print_header("Your current order:")
         table = self.order.copy()
-        table.append(utils.Table.RowType.SINGLE_LINE)  # Add a single line separator
+
+        # Add a single line separator
+        table.append(utils.Table.RowType.SINGLE_LINE)
+
         # Add total cost to the order list
         table.append({"index": "", "name": "Order Cost",
                      "price": self.calculate_cost()})
@@ -173,26 +190,27 @@ class Order():
         # Remove pie from order
         if 0 <= remove_index < len(self.order):
             removed_pie = self.order.pop(remove_index)
-            utils.print_success(f"Removed {removed_pie['name']} from your order.")
+            utils.print_success(
+                f"Removed {removed_pie['name']} from your order.")
         else:
             utils.print_error("Invalid index. No item removed.")
 
     def show_help(self):
         self.command_table.print(self.commands)
-        
+
     def starting_prompt(self):
-        utils.print_title("ORDERING SYSTEM") # Prints title 
+        utils.print_title("ORDERING SYSTEM")  # Prints title
         print("You can order pies from our menu below.")
         print("To order a pie, please enter the index number of the pie you want.")
         print()
         print("You can also type in commands for more options.")
         print()
 
-        self.print_menu() # Prints menu
+        self.print_menu()  # Prints menu
 
         # Offset the command table to put it on the right of the menu
         # x_offset is set to 50 to move it right
-        # y_offset is set to 13 to move it up 
+        # y_offset is set to 13 to move it up
         self.command_table.x_offset = 50
         self.command_table.y_offset = 13
 
@@ -203,10 +221,15 @@ class Order():
         self.command_table.x_offset = 0
         self.command_table.y_offset = 0
 
+    # starts ordering system
     def get_order(self):
+        # prints out starting prompt
         self.starting_prompt()
+
+        # sets done to false, so loop will run
         self.done = False
 
+        # Keeps asking for prompts until user is done
         while not self.done:
             # Get user input
             print()
@@ -216,6 +239,7 @@ class Order():
             # lowercase the input for case insensitive matching
             user_input = user_input.lower()
 
+            # Command map for commands to functions
             command_map = {
                 ("done", "d"): self.finish,
                 ("exit", "e"): self.exit,
@@ -235,13 +259,15 @@ class Order():
             # Check if input is an integer, for ordering a pie
             else:
                 if not validator.validate_int(user_input):
-                    utils.print_error("Ivalid input. Please enter a valid index or a command.")
+                    utils.print_error(
+                        "Ivalid input. Please enter a valid index or a command.")
 
                 # Add pie based on index
                 else:
                     # Convert to 0-based index
                     order = int(user_input) - 1
 
+                    # Check if index is within range
                     if 0 <= order < len(pies):
                         utils.print_success(
                             f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
@@ -251,12 +277,16 @@ class Order():
                             "Invalid index. Please enter a valid index from the menu.")
 
 
+# Gets pickup method
 def get_pickup_method():
     utils.print_title("PICKUP METHOD")
+
+    # Keep asking question until loop is broken - valid input is accepted
     while True:
         print("Would you like to pick up your order or have it delivered?")
         print("Input 'pickup' or 'p' for Pick up")
-        print("Input 'delivery' or 'd' for Delivery " + Style.BRIGHT + "(Costs an additional $14)")
+        print("Input 'delivery' or 'd' for Delivery " +
+              Style.BRIGHT + "(Costs an additional $14)")
 
         # Prompt user for input, case insensitive
         choice = input("Enter your choice: ").lower()
@@ -266,10 +296,12 @@ def get_pickup_method():
             utils.print_success("You have chosen to pick up your order.")
             return False
         elif choice in ("delivery", "deliver", "d"):
-            utils.print_success("You have chosen to have your order delivered.")
+            utils.print_success(
+                "You have chosen to have your order delivered.")
             return True
         else:
-            utils.print_error("Invalid choice. Please enter 'pickup' for Pick up, or 'delivery' for Delivery.")
+            utils.print_error(
+                "Invalid choice. Please enter 'pickup' for Pick up, or 'delivery' for Delivery.")
 
 
 class Details():
@@ -283,29 +315,41 @@ class Details():
             widths=[10, 30],
             keys=["Field", "Value"])
 
+    # Function for asking questions, takes in prompt and validator function
     def get_valid_input(self, prompt, validation_func):
+        # Asks question until validator function returns true
         while True:
             user_input = input(prompt)
             if validation_func(user_input):
                 return user_input
 
     def print_details(self):
+        # Create table data, adding name and phone
         table_data = []
         table_data.append({"Field": "Name:", "Value": self.name})
         table_data.append({"Field": "Phone:", "Value": self.phone})
 
+        # Only add address if address if not falsey
         if self.address:
             table_data.append({"Field": "Address:", "Value": self.address})
 
         # print the table with customer details
         return self.table.print(table_data)
 
+    # Main starting function for getting details.
+    # Gets address if delivery is true
     def get_details(self, delivery):
         utils.print_title("CUSTOMER DETAILS")
+
+        # Get name
         self.name = self.get_valid_input(
             "Enter your name: ", validator.validate_name)
+
+        # Get phone
         self.phone = self.get_valid_input(
             "Enter your phone number: ", validator.validate_phone)
+
+        # Get address if delivery is true
         if delivery:
             self.address = self.get_valid_input(
                 "Enter your address: ", validator.validate_address)
@@ -314,21 +358,28 @@ class Details():
 def confirm(user_order, user_details, delivery):
     confirmed = False
 
+    # asks user for confirmation before continuing
+    # returns boolean whether confirmed or not
     def confirm_order():
+        # allow to write over nonlocal variable
         nonlocal confirmed
 
         confirmation = input(
             "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
+
         if confirmation in ("yes", "y"):
             utils.print_success("Your order has been confirmed!")
             utils.print_success("Thank you for ordering with us!")
-            utils.print_success("Your order will be ready for pickup or delivery soon.")
+            utils.print_success(
+                "Your order will be ready for pickup or delivery soon.")
             confirmed = True
 
+    # aborts program
     def abort():
         utils.print_error("Order cancelled. Goodbye!")
         exit()
 
+    # sends user back to ordering system
     def edit_order():
         print("Editing order...")
         print()
@@ -337,6 +388,7 @@ def confirm(user_order, user_details, delivery):
         print()
         print_all()
 
+    # sends user back to editing details
     def edit_details():
         print("Editing details...")
         print()
@@ -344,13 +396,17 @@ def confirm(user_order, user_details, delivery):
         utils.print_success("Details updated!")
         print()
         print_all()
-    
+
+    # sends user back to changing pickup method
+    # if changes from pickup to delivery, ask for address
     def edit_pickup_method():
         nonlocal delivery
 
         print("Editing pickup method...")
         print()
         delivery = get_pickup_method()
+
+        # If option is changed to delivery and there is no address, get the address
         if delivery and not user_details.address:
             user_details.address = user_details.get_valid_input(
                 "Enter your address: ", validator.validate_address)
@@ -359,31 +415,42 @@ def confirm(user_order, user_details, delivery):
         print()
         print_all()
 
-    def help():
+    def show_help():
         commands_table.print(commands)
 
+    # Prints all details, order, details and pickup method
     def print_all():
+        # print order
         table_height = user_order.print_order()
+
+        # print details next to table
         user_details.table.x_offset = 60
         user_details.table.y_offset = table_height
         user_details.print_details()
+
+        # if delivery, print delivery, if not print pickup
         if delivery:
             print("Pickup method:  " + Style.BRIGHT + "Delivery")
         else:
             print("Pickup method:  " + Style.BRIGHT + "Pickup")
 
+        # calculate total cost
+        # if delivery, add an additional $14
+        # if not, add 0
         total = user_order.calculate_cost() + (14 if delivery else 0)
         print("Total cost:  " + Style.BRIGHT + f"${total:.2f}")
 
         print()
         print("If everything looks good, please confirm your order by entering 'confirm'.")
 
+    # Create table from commands to be printed nicely
     commands_table = utils.Table(
         headers=["Avaliable commands", ""],
         widths=[20, 30],
         keys=["command", "description"],
     )
 
+    # Array of possible commands and their description
     commands = [
         {"command": "'confirm' or 'c':", "description": "Confirm the order"},
         {"command": "'abort' or 'a':", "description": "Abort/cancel the order"},
@@ -393,6 +460,7 @@ def confirm(user_order, user_details, delivery):
         {"command": "'view' or 'v':", "description": "View order details again"},
     ]
 
+    # Dictionary of possible commands and their functions
     command_map = {
         ("abort", "a"): abort,
         ("confirm", "c"): confirm_order,
@@ -404,16 +472,21 @@ def confirm(user_order, user_details, delivery):
 
     utils.print_title("CONFIRMATION")
     print("Just before we send your order, please check that all your details and order are correct.")
+
+    # Prints all details
     print_all()
 
+    # Keeps asking question until order is confirmed
     while not confirmed:
         print()
         print("Type in a command for any action you want to take.")
-        help()
+        show_help()
 
         user_input = input("Enter command: ").lower()
+        # Iterates through the command map to find command
         for key, command in command_map.items():
             if user_input in key:
+                # Execute that command's function
                 command()
                 break
         else:
@@ -429,16 +502,13 @@ def main():
     user_order = Order()
     user_order.get_order()
 
-
-    # Single line separator before moving to next section
     print()
 
     # Getting pickup method by calling the function
     is_delivery = get_pickup_method()
 
-    # Single line separator before moving to next section
     print()
-    
+
     # Getting user details
     # Creates details class
     # Then asks user for their details
@@ -446,7 +516,6 @@ def main():
     user_details = Details()
     user_details.get_details(is_delivery)
 
-    # Single line separator before moving to next section
     print()
 
     # Confirmation
