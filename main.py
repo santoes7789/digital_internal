@@ -4,6 +4,12 @@ from enum import Enum
 from colorama import Style 
 import utils
 
+# TODO
+# Add a comments
+# Sort order by name
+# Add more pies
+# fucntion for thing i know what im takling abt
+# remove address from details if pickup is selected
 
 # Bot names for the ordering system
 bot_names = ["Alice", "Bob", "Charlie", "Daisy",
@@ -369,6 +375,9 @@ def confirm(user_order, user_details, delivery):
         total = user_order.calculate_cost() + (14 if delivery else 0)
         print("Total cost:  " + Style.BRIGHT + f"${total:.2f}")
 
+        print()
+        print("If everything looks good, please confirm your order by entering 'confirm'.")
+
     commands_table = utils.Table(
         headers=["Avaliable commands", ""],
         widths=[20, 30],
@@ -396,8 +405,6 @@ def confirm(user_order, user_details, delivery):
     utils.print_title("CONFIRMATION")
     print("Just before we send your order, please check that all your details and order are correct.")
     print_all()
-    print()
-    print("If everything looks good, please confirm your order by entering 'confirm'.")
 
     while not confirmed:
         print()
