@@ -74,12 +74,11 @@ class Table():
             else:
                 self.offset_x()
                 if self.index:
-                    print(f"{item.get("index", row + 1)
-                          :<{self.index_column_width}}", end="")
+                    element = item.get("index", row + 1)
+                    print(f"{element:<{self.index_column_width}}", end="")
                 for i, key in enumerate(self.keys):
                     value = item.get(key, "")
-                    print(f"{value:{self.alignments[i]}{
-                          self.widths[i]}{self.formats[i]}}", end="")
+                    print(f"{value:{self.alignments[i]}{self.widths[i]}{self.formats[i]}}", end="")
                 print()
 
         self.double_line()

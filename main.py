@@ -47,8 +47,8 @@ def welcome():
     utils.print_title("=" * banner_width)
 
     # Prints welcome message, centered with title style (bolded)
-    utils.print_title(f"Welcome to best pie shop, my name is {
-                      bot_name}".center(banner_width))
+    message = f"Welcome to the best pie shop, my name is {bot_name}"
+    utils.print_title(message.center(banner_width))
 
     print()
 
