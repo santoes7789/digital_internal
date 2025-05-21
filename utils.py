@@ -83,13 +83,13 @@ class Table():
                 print(f"{'Index':<{self.index_column_width}}", end="")
 
             # Print other headers
-            for i in range(len(self.headers)):
-                print(f"{self.headers[i]:<{self.widths[i]}}", end="")
+            for index, header in enumerate(self.headers):
+                print(f"{header:<{self.widths[index]}}", end="")
             print()
 
         self.single_line()
 
-        # Print pies, by iterating through each item
+        # Print pies, by iterating through each itemS
         for row, item in enumerate(array):
             # If item is a single or double line, print that
             if item == Table.RowType.SINGLE_LINE:
