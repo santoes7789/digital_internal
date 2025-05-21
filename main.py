@@ -31,6 +31,7 @@ pies = [
     {"name": "Shepherd’s Pie", "price": 8.99}
 ]
 
+
 def program_end():
     print("Would you like to make a new order?")
     new_order = input(
@@ -38,9 +39,9 @@ def program_end():
 
     if new_order in ("yes", "y"):
         main()
-    else: 
+    else:
         print("Goodbye!")
-        
+
     exit()
 
 # Prints a welcome message with a random bot name
@@ -276,7 +277,7 @@ class Order():
             else:
                 if not validator.validate_int(user_input):
                     utils.print_error(
-                        "Ivalid input. Please enter a valid index or a command.")
+                        "Invalid input. Please enter a valid index or a command.")
 
                 # Add pie based on index
                 else:
@@ -370,6 +371,8 @@ class Details():
             self.address = self.get_valid_input(
                 "Enter your address: ", validator.validate_address)
 
+        utils.print_success("Your information has been saved!")
+
 
 def confirm(user_order, user_details, delivery):
     confirmed = False
@@ -390,8 +393,10 @@ def confirm(user_order, user_details, delivery):
                 utils.print_success("Your order will be delivered to " +
                                     user_details.address + " soon.")
             else:
-                utils.print_success("Your order will be ready for pickup soon.")
-                utils.print_sucesss("You will recieve a text message when it is ready.")
+                utils.print_success(
+                    "Your order will be ready for pickup soon.")
+                utils.print_success(
+                    "You will recieve a text message when it is ready.")
             confirmed = True
 
     # aborts program
@@ -551,6 +556,5 @@ def main():
 
     print()
     program_end()
-
-
+    
 main()
