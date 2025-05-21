@@ -6,7 +6,6 @@ import validator
 # TODO
 # Sort order by name
 # Add more pies
-# fucntion for thing i know what im takling abt
 # remove address from details if pickup is selected
 
 # Bot names for the ordering system
@@ -15,16 +14,21 @@ bot_names = ["Alice", "Bob", "Charlie", "Daisy",
 
 # Menu information stored in one array
 pies = [
-    {"name": "Apple Pie", "price": 10},
-    {"name": "Cherry Pie", "price": 12},
-    {"name": "Blueberry Pie", "price": 15},
-    {"name": "Pumpkin Pie", "price": 8},
-    {"name": "Pecan Pie", "price": 14},
-    {"name": "Lemon Meringue Pie", "price": 11},
-    {"name": "Key Lime Pie", "price": 13},
-    {"name": "Chocolate Cream Pie", "price": 9},
-    {"name": "Banana Cream Pie", "price": 16},
-    {"name": "Butter Chicken Pie", "price": 7}
+    {"name": "Apple Pie", "price": 7.99},
+    {"name": "Pumpkin Pie", "price": 6.99},
+    {"name": "Cherry Pie", "price": 8.49},
+    {"name": "Pecan Pie", "price": 8.99},
+    {"name": "Blueberry Pie", "price": 8.29},
+    {"name": "Key Lime Pie", "price": 7.49},
+    {"name": "Lemon Meringue Pie", "price": 7.29},
+    {"name": "Sweet Potato Pie", "price": 6.79},
+    {"name": "Chocolate Cream Pie", "price": 8.19},
+    {"name": "Butter Chicken Pie", "price": 7.99},
+    {"name": "Banana Cream Pie", "price": 7.89},
+    {"name": "Strawberry Rhubarb Pie", "price": 8.59},
+    {"name": "Meat Pie", "price": 9.49},
+    {"name": "Chicken Pot Pie", "price": 9.29},
+    {"name": "Shepherd’s Pie", "price": 8.99}
 ]
 
 
