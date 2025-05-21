@@ -19,7 +19,8 @@ def validate_name(name):
     if name.strip() and re.fullmatch(allowed_chars, name):
         return True
 
-    utils.print_error("Invalid name. A valid name should not include numbers or special characters.")
+    utils.print_error(
+        "Invalid name. A valid name should not include numbers or special characters.")
     return False
 
 # Validates phone number

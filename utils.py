@@ -105,7 +105,7 @@ class Table():
                     element = item.get("index", row + 1)
                     print(f"{element:<{self.index_column_width}}", end="")
 
-                # Iterate through each key, and getting value, 
+                # Iterate through each key, and getting value,
                 # printing with proper alignment, width and format
                 for i, key in enumerate(self.keys):
                     value = item.get(key, "")
