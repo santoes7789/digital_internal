@@ -8,11 +8,6 @@ from colorama import Style
 import utils
 import validator
 
-# TODO
-# Sort order by name
-# Add more pies
-# remove address from details if pickup is selected
-
 DELIVERY_COST = 14
 FREE_DELIVERY_THRESHOLD = 50
 
@@ -43,7 +38,7 @@ pies = [
 def program_end():
     print("Would you like to make a new order?")
     new_order = input(
-        "Type 'yes' or 'y' to make a new order, anything else to exit: ").lower()
+        "Type 'yes' or 'y' to make a new order, anything else to exit: ").strip().lower()
 
     if new_order in ("yes", "y"):
         main()
@@ -137,7 +132,7 @@ class Order():
         print()
 
         confirmation = input(
-            "Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
+            "Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
 
         if confirmation in ("yes", "y"):
             utils.print_success("You have finished ordering!")
@@ -154,7 +149,7 @@ class Order():
     def exit(self):
         if self.order:
             confirmation = input(
-                "Are you sure you want to exit? All items in order will be cleared. (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
+                "Are you sure you want to exit? All items in order will be cleared. (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
             if not confirmation in ("yes", "y"):
                 return
 
@@ -169,7 +164,7 @@ class Order():
             return
 
         confirmation = input(
-            "Are you sure you want to clear your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
+            "Are you sure you want to clear your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
         if confirmation in ("yes", "y"):
             self.order.clear()
             utils.print_success("Your order has been cleared.")
@@ -202,7 +197,7 @@ class Order():
         utils.print_header("Your current order:")
         self.table.print(self.order)
 
-        remove_index = input("Enter the index of the pie you want to remove: ")
+        remove_index = input("Enter the index of the pie you want to remove: ").strip()
 
         # Checks if input is an integer
         if not validator.validate_int(remove_index):
@@ -260,7 +255,7 @@ class Order():
                 "Please enter the index of the pie you want to order (or 'done' to finish): ")
 
             # lowercase the input for case insensitive matching
-            user_input = user_input.lower()
+            user_input = user_input.strip().lower()
 
             # Command map for commands to functions
             command_map = {
@@ -312,7 +307,7 @@ def get_pickup_method():
               Style.BRIGHT + "(Costs an additional $14)")
 
         # Prompt user for input, case insensitive
-        choice = input("Enter your choice: ").lower()
+        choice = input("Enter your choice: ").strip().lower()
 
         # Find the user's choice, finding the first match in the list of options
         if choice in ("pickup", "pick up", "pick", "p"):
@@ -342,7 +337,7 @@ class Details():
     def get_valid_input(self, prompt, validation_func):
         # Asks question until validator function returns true
         while True:
-            user_input = input(prompt)
+            user_input = input(prompt).strip()
             if validation_func(user_input):
                 return user_input
 
@@ -390,7 +385,7 @@ def confirm(user_order, user_details, delivery):
         nonlocal confirmed
 
         confirmation = input(
-            "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
+            "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
 
         if confirmation in ("yes", "y"):
             utils.print_success("Your order has been confirmed!")
@@ -398,6 +393,8 @@ def confirm(user_order, user_details, delivery):
             if delivery:
                 utils.print_success("Your order will be delivered to " +
                                     user_details.address + " soon.")
+                utils.print_success(
+                    "You will receive a text message regarding delivery status.")
             else:
                 utils.print_success(
                     "Your order will be ready for pickup soon.")
@@ -409,7 +406,7 @@ def confirm(user_order, user_details, delivery):
     def abort():
         nonlocal confirmed
         confirmation = input(
-            "Are you sure you want to abort your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").lower()
+            "Are you sure you want to abort your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
         if confirmation in ("yes", "y"):
             utils.print_error("Order cancelled.")
             confirmed = True
@@ -524,7 +521,7 @@ def confirm(user_order, user_details, delivery):
         print("Type in a command for any action you want to take.")
         show_help()
 
-        user_input = input("Enter command: ").lower()
+        user_input = input("Enter command: ").strip().lower()
         # Iterates through the command map to find command
         for key, command in command_map.items():
             if user_input in key:
