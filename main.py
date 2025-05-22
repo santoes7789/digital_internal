@@ -1,5 +1,10 @@
+# Random library is used to randomly select a bot name
 import random
+
+# Colorama library is used to add color and styling to the console output
 from colorama import Style
+
+# Importing custom modules for utility functions and validation
 import utils
 import validator
 
@@ -7,6 +12,9 @@ import validator
 # Sort order by name
 # Add more pies
 # remove address from details if pickup is selected
+
+DELIVERY_COST = 14
+FREE_DELIVERY_THRESHOLD = 50
 
 # Bot names for the ordering system
 bot_names = ["Alice", "Bob", "Charlie", "Daisy",
@@ -394,7 +402,7 @@ def confirm(user_order, user_details, delivery):
                 utils.print_success(
                     "Your order will be ready for pickup soon.")
                 utils.print_success(
-                    "You will recieve a text message when it is ready.")
+                    "You will receive a text message when it is ready.")
             confirmed = True
 
     # aborts program
@@ -465,7 +473,13 @@ def confirm(user_order, user_details, delivery):
         # calculate total cost
         # if delivery, add an additional $14
         # if not, add 0
-        total = user_order.calculate_cost() + (14 if delivery else 0)
+
+        total = user_order.calculate_cost()
+
+        # If delivery is selected, add delivery cost, if total is less than $50
+        if delivery and total <= FREE_DELIVERY_THRESHOLD:
+            total += DELIVERY_COST
+
         print("Total cost:  " + Style.BRIGHT + f"${total:.2f}")
 
         print()
@@ -553,5 +567,5 @@ def main():
 
     print()
     program_end()
-    
+
 main()
