@@ -323,10 +323,12 @@ def get_pickup_method():
 
 
 class Details():
-    def __init__(self):
+    def __init__(self, delivery):
         self.name = None
         self.phone = None
         self.address = None
+
+        self.delivery = delivery
 
         self.table = utils.Table(
             headers=["Your Details:", ""],
@@ -348,7 +350,7 @@ class Details():
         table_data.append({"Field": "Phone:", "Value": self.phone})
 
         # Only add address if address if not falsey
-        if self.address:
+        if self.delivery:
             table_data.append({"Field": "Address:", "Value": self.address})
 
         # print the table with customer details
@@ -356,7 +358,7 @@ class Details():
 
     # Main starting function for getting details.
     # Gets address if delivery is true
-    def get_details(self, delivery):
+    def get_details(self):
         utils.print_title("CUSTOMER DETAILS")
 
         # Get name
@@ -368,14 +370,14 @@ class Details():
             "Enter your phone number: ", validator.validate_phone)
 
         # Get address if delivery is true
-        if delivery:
+        if self.delivery:
             self.address = self.get_valid_input(
                 "Enter your address: ", validator.validate_address)
 
         utils.print_success("Your information has been saved!")
 
 
-def confirm(user_order, user_details, delivery):
+def confirm(user_order, user_details):
     confirmed = False
 
     # asks user for confirmation before continuing
@@ -390,7 +392,7 @@ def confirm(user_order, user_details, delivery):
         if confirmation in ("yes", "y"):
             utils.print_success("Your order has been confirmed!")
             utils.print_success("Thank you for ordering with us!")
-            if delivery:
+            if user_details.delivery:
                 utils.print_success("Your order will be delivered to " +
                                     user_details.address + " soon.")
                 utils.print_success(
@@ -426,7 +428,7 @@ def confirm(user_order, user_details, delivery):
     def edit_details():
         print("Editing details...")
         print()
-        user_details.get_details(delivery)
+        user_details.get_details()
         utils.print_success("Details updated!")
         print()
         print_all()
@@ -434,14 +436,13 @@ def confirm(user_order, user_details, delivery):
     # sends user back to changing pickup method
     # if changes from pickup to delivery, ask for address
     def edit_pickup_method():
-        nonlocal delivery
 
         print("Editing pickup method...")
         print()
-        delivery = get_pickup_method()
+        user_details.delivery = get_pickup_method()
 
         # If option is changed to delivery and there is no address, get the address
-        if delivery and not user_details.address:
+        if user_details.delivery and not user_details.address:
             user_details.address = user_details.get_valid_input(
                 "Enter your address: ", validator.validate_address)
 
@@ -462,19 +463,17 @@ def confirm(user_order, user_details, delivery):
         user_details.print_details()
 
         # if delivery, print delivery, if not print pickup
-        if delivery:
+        if user_details.delivery:
             print("Pickup method:  " + Style.BRIGHT + "Delivery")
         else:
             print("Pickup method:  " + Style.BRIGHT + "Pickup")
 
         # calculate total cost
         # if delivery, add an additional $14
-        # if not, add 0
-
         total = user_order.calculate_cost()
 
         # If delivery is selected, add delivery cost, if total is less than $50
-        if delivery and total <= FREE_DELIVERY_THRESHOLD:
+        if user_details.delivery and total <= FREE_DELIVERY_THRESHOLD:
             total += DELIVERY_COST
 
         print("Total cost:  " + Style.BRIGHT + f"${total:.2f}")
@@ -552,15 +551,15 @@ def main():
     # Creates details class
     # Then asks user for their details
     # If delivery is selected, asks for address
-    user_details = Details()
-    user_details.get_details(is_delivery)
+    user_details = Details(is_delivery)
+    user_details.get_details()
 
     print()
 
     # Confirmation
     # Calls the confirmation function
     # Passes the order and details to the function
-    confirm(user_order, user_details, is_delivery)
+    confirm(user_order, user_details)
 
     print()
     program_end()
