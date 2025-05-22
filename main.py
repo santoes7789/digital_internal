@@ -49,6 +49,8 @@ def program_end():
 
 # Prints a welcome message with a random bot name
 # Also awaits for enter
+
+
 def welcome():
     # Randomly select a bot name from the list
     bot_name = random.choice(bot_names)
@@ -108,7 +110,8 @@ class Order():
             keys=["name", "price"],
             alignments=["<", ">"],
             formats=["", ".2f"],
-            index=True
+            index=True,
+            x_offset=2
         )
 
     # Calculates cost based on order
@@ -197,7 +200,8 @@ class Order():
         utils.print_header("Your current order:")
         self.table.print(self.order)
 
-        remove_index = input("Enter the index of the pie you want to remove: ").strip()
+        remove_index = input(
+            "Enter the index of the pie you want to remove: ").strip()
 
         # Checks if input is an integer
         if not validator.validate_int(remove_index):
@@ -333,7 +337,9 @@ class Details():
         self.table = utils.Table(
             headers=["Your Details:", ""],
             widths=[10, 30],
-            keys=["Field", "Value"])
+            keys=["Field", "Value"],
+            x_offset=2
+        )
 
     # Function for asking questions, takes in prompt and validator function
     def get_valid_input(self, prompt, validation_func):
@@ -484,6 +490,7 @@ def confirm(user_order, user_details):
         headers=["Avaliable commands", ""],
         widths=[20, 30],
         keys=["command", "description"],
+        x_offset=2
     )
 
     # Array of possible commands and their description
@@ -562,5 +569,6 @@ def main():
 
     print()
     program_end()
+
 
 main()
