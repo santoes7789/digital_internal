@@ -378,14 +378,11 @@ class Details():
 
 
 def confirm(user_order, user_details):
-    confirmed = False
 
     # asks user for confirmation before continuing
     # returns boolean whether confirmed or not
     def confirm_order():
         # allow to write over nonlocal variable
-        nonlocal confirmed
-
         confirmation = input(
             "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
 
@@ -393,25 +390,26 @@ def confirm(user_order, user_details):
             utils.print_success("Your order has been confirmed!")
             utils.print_success("Thank you for ordering with us!")
             if user_details.delivery:
+                print()
                 utils.print_success("Your order will be delivered to " +
                                     user_details.address + " soon.")
                 utils.print_success(
                     "You will receive a text message regarding delivery status.")
             else:
+                print()
                 utils.print_success(
                     "Your order will be ready for pickup soon.")
                 utils.print_success(
                     "You will receive a text message when it is ready.")
-            confirmed = True
+            return True
 
     # aborts program
     def abort():
-        nonlocal confirmed
         confirmation = input(
             "Are you sure you want to abort your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
         if confirmation in ("yes", "y"):
             utils.print_error("Order cancelled.")
-            confirmed = True
+            return True
         else:
             utils.print_error("Order not cancelled.")
 
@@ -514,8 +512,8 @@ def confirm(user_order, user_details):
     # Prints all details
     print_all()
 
-    # Keeps asking question until order is confirmed
-    while not confirmed:
+    # Keeps asking question until order is confirmed or aborted
+    while True:
         print()
         print("Type in a command for any action you want to take.")
         show_help()
@@ -525,7 +523,8 @@ def confirm(user_order, user_details):
         for key, command in command_map.items():
             if user_input in key:
                 # Execute that command's function
-                command()
+                if command():
+                    return
                 break
         else:
             utils.print_error("Invalid command. Please try again.")
