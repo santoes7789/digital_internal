@@ -49,6 +49,12 @@ class Table():
         # Offsetting table so it can be printed anywhere (relative to current cursor position)
         self.x_offset = x_offset
         self.y_offset = y_offset
+    
+    # Function to set x and y offsets, if value is ommited, it will be set to 0
+    def set_offset(self, x_offset=0, y_offset=0):
+        # Set x and y offset
+        self.x_offset = x_offset
+        self.y_offset = y_offset
 
     # Functions to apply offset
     def offset_x(self):
@@ -89,7 +95,7 @@ class Table():
 
         self.single_line()
 
-        # Print pies, by iterating through each itemS
+        # Print pies, by iterating through each item
         for row, item in enumerate(array):
             # If item is a single or double line, print that
             if item == Table.RowType.SINGLE_LINE:

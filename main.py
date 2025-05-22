@@ -223,20 +223,18 @@ class Order():
         print("You can also type in commands for more options.")
         print()
 
-        self.print_menu()  # Prints menu
+        table_height = self.print_menu()  # Prints menu
 
         # Offset the command table to put it on the right of the menu
         # x_offset is set to 50 to move it right
         # y_offset is set to 13 to move it up
-        self.command_table.x_offset = 50
-        self.command_table.y_offset = 13
+        self.command_table.set_offset(50, table_height)
 
         # Print the command table
         self.show_help()
 
         # Reset the offsets to 0 for the next print
-        self.command_table.x_offset = 0
-        self.command_table.y_offset = 0
+        self.command_table.set_offset(0, 0)
 
     # starts ordering system
     def get_order(self):
@@ -455,8 +453,7 @@ def confirm(user_order, user_details, delivery):
         table_height = user_order.print_order()
 
         # print details next to table
-        user_details.table.x_offset = 60
-        user_details.table.y_offset = table_height
+        user_details.table.set_offset(50, table_height)
         user_details.print_details()
 
         # if delivery, print delivery, if not print pickup
