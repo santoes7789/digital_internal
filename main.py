@@ -35,17 +35,6 @@ pies = [
 ]
 
 
-def program_end():
-    print("Would you like to make a new order?")
-    new_order = input(
-        "Type 'yes' or 'y' to make a new order, anything else to exit: ").strip().lower()
-
-    if new_order in ("yes", "y"):
-        main()
-    else:
-        print("Goodbye!")
-
-    exit()
 
 # Prints a welcome message with a random bot name
 # Also awaits for enter
@@ -73,6 +62,20 @@ def welcome():
 
     input()  # Waits for user to press enter before continuing
 
+# Prints a message asking if the user wants to make a new order
+# If yes, it restarts the program
+# If no, it exits the program
+def program_end():
+    print("Would you like to make a new order?")
+    new_order = input(
+        "Type 'yes' or 'y' to make a new order, anything else to exit: ").strip().lower()
+
+    if new_order in ("yes", "y"):
+        main()
+    else:
+        print("Goodbye!")
+
+    exit()
 
 # Order class for ordering
 class Order():
@@ -322,11 +325,13 @@ def get_pickup_method():
                 "Invalid choice. Please enter 'pickup' for Pick up, or 'delivery' for Delivery.")
 
 
+# Class for getting user details
 class Details():
     def __init__(self, delivery):
         self.name = None
         self.phone = None
         self.address = None
+        self.suburb = None
 
         self.delivery = delivery
 
@@ -352,6 +357,7 @@ class Details():
         # Only add address if address if not falsey
         if self.delivery:
             table_data.append({"Field": "Address:", "Value": self.address})
+            table_data.append({"Field": "Suburb:", "Value": self.suburb})
 
         # print the table with customer details
         return self.table.print(table_data)
@@ -369,10 +375,12 @@ class Details():
         self.phone = self.get_valid_input(
             "Enter your phone number: ", validator.validate_phone)
 
-        # Get address if delivery is true
+        # Get address (and suburb) if delivery is true
         if self.delivery:
             self.address = self.get_valid_input(
-                "Enter your address: ", validator.validate_address)
+                "Enter your address (format: [House number] [Street Name]): ", validator.validate_address)
+            self.suburb = self.get_valid_input(
+                "Enter your suburb: ", validator.validate_name)
 
         utils.print_success("Your information has been saved!")
 
@@ -442,7 +450,9 @@ def confirm(user_order, user_details):
         # If option is changed to delivery and there is no address, get the address
         if user_details.delivery and not user_details.address:
             user_details.address = user_details.get_valid_input(
-                "Enter your address: ", validator.validate_address)
+                "Enter your address (format: [House number] [Street Name]): ", validator.validate_address)
+            user_details.suburb = user_details.get_valid_input(
+                "Enter your suburb: ", validator.validate_name)
 
         utils.print_success("Pickup method updated!")
         print()
