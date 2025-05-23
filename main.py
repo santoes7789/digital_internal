@@ -159,7 +159,7 @@ class Order():
             if not confirmation in ("yes", "y"):
                 return
 
-        print("Exiting the ordering system.")
+        utils.print_success("Exiting the ordering system.")
         print()
         program_end()
 
