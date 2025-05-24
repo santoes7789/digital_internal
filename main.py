@@ -229,6 +229,7 @@ class Order():
         utils.print_title("ORDERING SYSTEM")  # Prints title
         print("You can order pies from our menu below.")
         print("To order a pie, please enter the index number of the pie you want.")
+        print("Delivery cost is free for orders over $50.")
         print()
         print("You can also type in commands for more options.")
         print()
@@ -309,9 +310,10 @@ def get_pickup_method():
     # Keep asking question until loop is broken - valid input is accepted
     while True:
         print("Would you like to pick up your order or have it delivered?")
+        print("Delivery costs an additional $14, but is free for orders over $50.")
         print("Input 'pickup' or 'p' for Pick up")
         print("Input 'delivery' or 'd' for Delivery " +
-              Style.BRIGHT + "(Costs an additional $14)")
+              Style.BRIGHT + "(+$14)")
 
         # Prompt user for input, case insensitive
         choice = input("Enter your choice: ").strip().lower()
@@ -424,7 +426,7 @@ def confirm(user_order, user_details):
         confirmation = input(
             "Are you sure you want to abort your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
         if confirmation in ("yes", "y"):
-            utils.print_error("Order cancelled.")
+            utils.print_success("Order cancelled.")
             return True
         else:
             utils.print_error("Order not cancelled.")
