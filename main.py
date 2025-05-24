@@ -416,6 +416,8 @@ def confirm(user_order, user_details):
                 utils.print_success(
                     "You will receive a text message when it is ready.")
             return True
+        
+        utils.print_error("Order confirmation has been cancelled.")
 
     # aborts program
     def abort():
