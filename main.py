@@ -17,13 +17,15 @@ FREE_DELIVERY_THRESHOLD = 50
 
 # DESIGN CONSTANTS:
 # Widths for the menu table columns
-MENU_COLUMN_WIDTHS = [23, 7]
+MENU_COLUMN_WIDTHS = [23, 9]
 # Widths for commnad table columns
 COMMAND_COLUMN_WIDTHS = [20, 30]
 #  Widhts for customer details table columns
 CUSTOMER_DETAILS_COLUMN_WIDTHS = [10, 30]
 # Indents for table
 TABLE_INDENT = 2
+# Table spacing, between two tables
+TABLE_SPACING = 6
 
 
 
@@ -277,12 +279,14 @@ class Order():
         print()
 
         # Prints menu
-        table_height = self.print_menu()
+        table_width, table_height = self.print_menu()
 
         # Offset the command table to put it on the right of the menu
-        # x_offset is set to 50 to move it right
-        # y_offset is set to 13 to move it up
-        self.command_table.set_offset(50, table_height)
+        # x_offset is set to table width + TABLE_INDENT + TABLE_SPACING
+        # This will put it next to the menu, with gap of TABLE_SPACING
+
+        # y_offset is set to table height so it is right next to the menu
+        self.command_table.set_offset(table_width + TABLE_INDENT + TABLE_SPACING, table_height)
 
         # Print the command table
         self.show_help()
@@ -531,10 +535,10 @@ def confirm(user_order, user_details):
     # Prints all details, order, details and pickup method
     def print_all():
         # print order
-        table_height = user_order.print_order()
+        table_width, table_height = user_order.print_order()
 
-        # print details next to table
-        user_details.table.set_offset(50, table_height)
+        # print details next to table, same as before
+        user_details.table.set_offset(table_width + TABLE_INDENT + TABLE_SPACING, table_height)
         user_details.print_details()
 
         # if delivery, print delivery, if not print pickup

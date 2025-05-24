@@ -21,7 +21,7 @@ def print_header(message):
 
 # Class for table template which can be printed
 class Table():
-    index_column_width = 8
+    INDEX_COLUMN_WIDTH = 8
 
     class RowType(Enum):
         SINGLE_LINE = 1
@@ -66,16 +66,22 @@ class Table():
             print(Cursor.UP(self.y_offset), end="")
 
     # Prints single or double line with offset
-    def single_line(self):
+    def single_line(self, width):
         self.offset_x()
-        print("--------------------------------------------")
+        print("-" * width)
 
-    def double_line(self):
+    def double_line(self, width):
         self.offset_x()
-        print("============================================")
+        print("=" * width)
 
     # Print the table given an array
     def print(self, array):
+        # Calculate table height
+        table_height = len(array) + 3
+        # Calculate table width
+        # If index is true, add index column width, if not add 0
+        table_width = sum(self.widths) + (self.INDEX_COLUMN_WIDTH if self.index else 0)
+
         # Set offset
         self.offset_y()
 
@@ -86,22 +92,22 @@ class Table():
 
             # Print index header if index is true
             if self.index:
-                print(f"{'Index':<{self.index_column_width}}", end="")
+                print(f"{'Index':<{self.INDEX_COLUMN_WIDTH}}", end="")
 
             # Print other headers
             for index, header in enumerate(self.headers):
-                print(f"{header:<{self.widths[index]}}", end="")
+                print(f"{header:{self.alignments[index]}{self.widths[index]}}", end="")
             print()
 
-        self.single_line()
+        self.single_line(table_width)
 
         # Print pies, by iterating through each item
         for row, item in enumerate(array):
             # If item is a single or double line, print that
             if item == Table.RowType.SINGLE_LINE:
-                self.single_line()
+                self.single_line(table_width)
             elif item == Table.RowType.DOULBLE_LINE:
-                self.double_line()
+                self.double_line(table_width)
 
             # Else print the row out
             else:
@@ -109,7 +115,7 @@ class Table():
                 # Print index column if index is true
                 if self.index:
                     element = item.get("index", row + 1)
-                    print(f"{element:<{self.index_column_width}}", end="")
+                    print(f"{element:<{self.INDEX_COLUMN_WIDTH}}", end="")
 
                 # Iterate through each key, and getting value,
                 # printing with proper alignment, width and format
@@ -119,7 +125,7 @@ class Table():
                 print()
 
         # Ending double line to show end of table
-        self.double_line()
+        self.double_line(table_width)
 
         # Calculate table height
         table_height = len(array) + 3
@@ -128,5 +134,5 @@ class Table():
         if table_height < self.y_offset:
             print(Cursor.DOWN(self.y_offset - table_height))
 
-        # Return table height
-        return table_height
+        # Return table dimensions 
+        return (table_width, table_height)
