@@ -8,8 +8,24 @@ from colorama import Style
 import utils
 import validator
 
+# Constant for delivery cost
 DELIVERY_COST = 14
+
+# Constant for free delivery threshold - if order total is above this, delivery is free
 FREE_DELIVERY_THRESHOLD = 50
+
+
+# DESIGN CONSTANTS:
+# Widths for the menu table columns
+MENU_COLUMN_WIDTHS = [23, 7]
+# Widths for commnad table columns
+COMMAND_COLUMN_WIDTHS = [20, 30]
+#  Widhts for customer details table columns
+CUSTOMER_DETAILS_COLUMN_WIDTHS = [10, 30]
+# Indents for table
+TABLE_INDENT = 2
+
+
 
 # Bot names for the ordering system
 bot_names = ["Alice", "Bob", "Charlie", "Daisy",
@@ -38,8 +54,6 @@ pies = [
 
 # Prints a welcome message with a random bot name
 # Also awaits for enter
-
-
 def welcome():
     # Randomly select a bot name from the list
     bot_name = random.choice(bot_names)
@@ -68,21 +82,27 @@ def welcome():
 # If yes, it restarts the program
 # If no, it exits the program
 def program_end():
+    # Prompts user
     print("Would you like to make a new order?")
+
+    # Gets user input
     new_order = input(
         "Type 'yes' or 'y' to make a new order, anything else to exit: ").strip().lower()
 
+    # If user input is yes or y, restart the program
     if new_order in ("yes", "y"):
         main()
+    # If user input is anything else, exit the program
     else:
         print("Goodbye!")
 
+    # Terminates the program
     exit()
 
 # Order class for ordering
 class Order():
 
-    # possible commands for order system
+    # possible commands for order system, to be printed
     commands = [
         {"command": "'menu' or 'm':", "description": "Show the menu"},
         {"command": "'done' or 'd':", "description": "Finish ordering"},
@@ -96,8 +116,9 @@ class Order():
     # creating table from commands to be printed
     command_table = utils.Table(
         headers=["Available commands:", ""],
-        widths=[20, 30],
-        keys=["command", "description"])
+        widths=COMMAND_COLUMN_WIDTHS,
+        keys=["command", "description"],
+        x_offset=TABLE_INDENT)
 
     def __init__(self):
         # init empty array
@@ -109,12 +130,12 @@ class Order():
         # create table template for order and menu to be printed from
         self.table = utils.Table(
             headers=["Pie Name", "Price ($)"],
-            widths=[23, 7],
+            widths=MENU_COLUMN_WIDTHS,
             keys=["name", "price"],
             alignments=["<", ">"],
             formats=["", ".2f"],
             index=True,
-            x_offset=2
+            x_offset=TABLE_INDENT
         )
 
     # Calculates cost based on order
@@ -122,40 +143,49 @@ class Order():
         total_cost = 0
         # Iterate through each pie to get the price
         for pie in self.order:
+            # Add the price of the pie to the total cost
             total_cost += pie['price']
+
+        # Returns total cost
         return total_cost
 
     # Finish ordering
     def finish(self):
         # Check if order is empty or not
         if not self.order:
+            # If order is empty, print error message and return
             utils.print_error(
                 "Your order is empty. Please order before finishing.")
             return
 
+        # If order is not empty, print success message
         self.print_order()
-
         print()
 
+        # Ask for confirmation before finishing the order
         confirmation = input(
             "Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
 
+        # If confirmation is yes or y, set done to true and return
         if confirmation in ("yes", "y"):
             utils.print_success("You have finished ordering!")
             self.done = True
             return
+        # If confirmation is anything else, print error message and return
         utils.print_error("Order confirmation has been cancelled.")
 
-    # Prints menu
+    # Prints pie menu
     def print_menu(self):
         utils.print_header("MENU:")
         return self.table.print(pies)
 
     # Exits the program, asks for confirmation before
     def exit(self):
+        # If order is not empty, ask for confirmation before exiting
         if self.order:
             confirmation = input(
                 "Are you sure you want to exit? All items in order will be cleared. (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
+            # If confirmation is not yes or y, exit the program
             if not confirmation in ("yes", "y"):
                 return
 
@@ -165,10 +195,12 @@ class Order():
 
     # Clears order asks for confirmation before doing so
     def clear_order(self):
+        # If order is empty, print error message and return
         if not self.order:
             utils.print_error("Your order is empty. Nothing to clear.")
             return
 
+        # If order is not empty, ask for confirmation before clearing
         confirmation = input(
             "Are you sure you want to clear your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
         if confirmation in ("yes", "y"):
@@ -179,10 +211,12 @@ class Order():
 
     # Shows current order
     def print_order(self):
+        # If order is empty, print error message and return
         if not self.order:
             utils.print_error("Your order is empty.")
             return
 
+        # Otherwise print order, adding total cost at the end.
         utils.print_header("Your current order:")
         table = self.order.copy()
 
@@ -196,13 +230,16 @@ class Order():
 
     # Removes pie from order
     def remove_pie(self):
+        # If order is empty, print error message and return
         if not self.order:
             utils.print_error("Your order is empty. Nothing to remove.")
             return
 
+        # Prints out current order
         utils.print_header("Your current order:")
         self.table.print(self.order)
 
+        # Ask user for index of pie to remove
         remove_index = input(
             "Enter the index of the pie you want to remove: ").strip()
 
@@ -216,15 +253,20 @@ class Order():
 
         # Remove pie from order
         if 0 <= remove_index < len(self.order):
+            # remove pie from order
             removed_pie = self.order.pop(remove_index)
+            # print success message
             utils.print_success(
                 f"Removed {removed_pie['name']} from your order.")
         else:
+            # If index is out of range, print error message, and do not remove anything
             utils.print_error("Invalid index. No item removed.")
 
+    # Shows help message with available commands
     def show_help(self):
         self.command_table.print(self.commands)
 
+    # Prints the starting prompt for the ordering system
     def starting_prompt(self):
         utils.print_title("ORDERING SYSTEM")  # Prints title
         print("You can order pies from our menu below.")
@@ -234,7 +276,8 @@ class Order():
         print("You can also type in commands for more options.")
         print()
 
-        table_height = self.print_menu()  # Prints menu
+        # Prints menu
+        table_height = self.print_menu()
 
         # Offset the command table to put it on the right of the menu
         # x_offset is set to 50 to move it right
@@ -245,7 +288,7 @@ class Order():
         self.show_help()
 
         # Reset the offsets to 0 for the next print
-        self.command_table.set_offset(0, 0)
+        self.command_table.set_offset(TABLE_INDENT, 0)
 
     # starts ordering system
     def get_order(self):
@@ -295,10 +338,12 @@ class Order():
 
                     # Check if index is within range
                     if 0 <= order < len(pies):
+                        # If index is valid, add pie to order
                         utils.print_success(
                             f"You have ordered {pies[order]['name']} for ${pies[order]['price']:.2f}.")
                         self.order.append(pies[order])
                     else:
+                        # If index is out of range, print error message
                         utils.print_error(
                             "Invalid index. Please enter a valid index from the menu.")
 
@@ -320,13 +365,18 @@ def get_pickup_method():
 
         # Find the user's choice, finding the first match in the list of options
         if choice in ("pickup", "pick up", "pick", "p"):
+            # If choice is pickup, print success message and return False
             utils.print_success("You have chosen to pick up your order.")
             return False
+
         elif choice in ("delivery", "deliver", "d"):
+            # If choice is delivery, print success message and return True
             utils.print_success(
                 "You have chosen to have your order delivered.")
             return True
+
         else:
+            # If choice is invalid, print error message and ask again
             utils.print_error(
                 "Invalid choice. Please enter 'pickup' for Pick up, or 'delivery' for Delivery.")
 
@@ -334,6 +384,7 @@ def get_pickup_method():
 # Class for getting user details
 class Details():
     def __init__(self, delivery):
+        # Initialize user details
         self.name = None
         self.phone = None
         self.address = None
@@ -341,11 +392,12 @@ class Details():
 
         self.delivery = delivery
 
+        # Create a table template for customer details
         self.table = utils.Table(
             headers=["Your Details:", ""],
-            widths=[10, 30],
+            widths=CUSTOMER_DETAILS_COLUMN_WIDTHS,
             keys=["Field", "Value"],
-            x_offset=2
+            x_offset=TABLE_INDENT
         )
 
     # Function for asking questions, takes in prompt and validator function
@@ -356,6 +408,7 @@ class Details():
             if validation_func(user_input):
                 return user_input
 
+    # Prints customer details in a table format, returns the height of the table
     def print_details(self):
         # Create table data, adding name and phone
         table_data = []
@@ -402,9 +455,11 @@ def confirm(user_order, user_details):
         confirmation = input(
             "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
 
+        # If confirmation is yes or y, print success message and return True
         if confirmation in ("yes", "y"):
             utils.print_success("Your order has been confirmed!")
             utils.print_success("Thank you for ordering with us!")
+            # Print different things depending on whether delivery is selected or not
             if user_details.delivery:
                 print()
                 utils.print_success("Your order will be delivered to " +
@@ -419,10 +474,12 @@ def confirm(user_order, user_details):
                     "You will receive a text message when it is ready.")
             return True
         
+        # If confirmation is anything else, print error message and return nothing
         utils.print_error("Order confirmation has been cancelled.")
 
     # aborts program
     def abort():
+        # Asks user for confirmation before aborting
         confirmation = input(
             "Are you sure you want to abort your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
         if confirmation in ("yes", "y"):
@@ -502,9 +559,9 @@ def confirm(user_order, user_details):
     # Create table from commands to be printed nicely
     commands_table = utils.Table(
         headers=["Avaliable commands", ""],
-        widths=[20, 30],
+        widths=COMMAND_COLUMN_WIDTHS,
         keys=["command", "description"],
-        x_offset=2
+        x_offset= TABLE_INDENT
     )
 
     # Array of possible commands and their description
