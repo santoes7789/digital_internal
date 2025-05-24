@@ -25,6 +25,9 @@ def validate_name(name):
 
 # Validates phone number
 def validate_phone(phone):
+
+    phone = phone.replace(" ", "")
+
     pattern = r"\d{8,10}"
 
     if re.fullmatch(pattern, phone):
