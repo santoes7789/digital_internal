@@ -87,14 +87,9 @@ def program_end():
     # Prompts user
     print("Would you like to make a new order?")
 
-    # Gets user input
-    new_order = input(
-        "Type 'yes' or 'y' to make a new order, anything else to exit: ").strip().lower()
-
-    # If user input is yes or y, restart the program
-    if new_order in ("yes", "y"):
+    # Gets user confirmation
+    if utils.confirm_prompt("Type 'yes' or 'y' to make a new order, anything else to exit: "):
         main()
-    # If user input is anything else, exit the program
     else:
         print("Goodbye!")
 
@@ -165,16 +160,12 @@ class Order():
         print()
 
         # Ask for confirmation before finishing the order
-        confirmation = input(
-            "Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
-
-        # If confirmation is yes or y, set done to true and return
-        if confirmation in ("yes", "y"):
+        if utils.confirm_prompt("Are you sure you want to finish ordering? (type 'yes' or 'y' to confirm, anything else to cancel): "):
             utils.print_success("You have finished ordering!")
             self.done = True
-            return
-        # If confirmation is anything else, print error message and return
-        utils.print_error("Order confirmation has been cancelled.")
+        else:
+            # If confirmation is anything else, print error message and return
+            utils.print_error("Order confirmation has been cancelled.")
 
     # Prints pie menu
     def print_menu(self):
@@ -185,10 +176,9 @@ class Order():
     def exit(self):
         # If order is not empty, ask for confirmation before exiting
         if self.order:
-            confirmation = input(
-                "Are you sure you want to exit? All items in order will be cleared. (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
             # If confirmation is not yes or y, exit the program
-            if not confirmation in ("yes", "y"):
+            if not utils.confirm_prompt("Are you sure you want to exit? All items in order will be cleared. (type 'yes' or 'y' to confirm, anything else to cancel): "):
+                utils.print_error("Exit cancelled. Returning to ordering system.")
                 return
 
         utils.print_success("Exiting the ordering system.")
@@ -202,10 +192,7 @@ class Order():
             utils.print_error("Your order is empty. Nothing to clear.")
             return
 
-        # If order is not empty, ask for confirmation before clearing
-        confirmation = input(
-            "Are you sure you want to clear your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
-        if confirmation in ("yes", "y"):
+        if utils.confirm_prompt("Are you sure you want to clear your order? (type 'yes' or 'y' to confirm, anything else to cancel): "):
             self.order.clear()
             utils.print_success("Your order has been cleared.")
         else:
@@ -455,12 +442,8 @@ def confirm(user_order, user_details):
     # asks user for confirmation before continuing
     # returns boolean whether confirmed or not
     def confirm_order():
-        # allow to write over nonlocal variable
-        confirmation = input(
-            "Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
-
         # If confirmation is yes or y, print success message and return True
-        if confirmation in ("yes", "y"):
+        if utils.confirm_prompt("Are you sure you want to confirm your order? (type 'yes' or 'y' to confirm, anything else to cancel): "):
             utils.print_success("Your order has been confirmed!")
             utils.print_success("Thank you for ordering with us!")
             # Print different things depending on whether delivery is selected or not
@@ -477,16 +460,13 @@ def confirm(user_order, user_details):
                 utils.print_success(
                     "You will receive a text message when it is ready.")
             return True
-        
+
         # If confirmation is anything else, print error message and return nothing
         utils.print_error("Order confirmation has been cancelled.")
 
     # aborts program
     def abort():
-        # Asks user for confirmation before aborting
-        confirmation = input(
-            "Are you sure you want to abort your order? (type 'yes' or 'y' to confirm, anything else to cancel): ").strip().lower()
-        if confirmation in ("yes", "y"):
+        if utils.confirm_prompt("Are you sure you want to cancel your order? (type 'yes' or 'y' to confirm, anything else to cancel): "):
             utils.print_success("Order cancelled.")
             return True
         else:

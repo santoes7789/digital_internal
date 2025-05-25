@@ -19,6 +19,12 @@ def print_title(message):
 def print_header(message):
     print(Fore.BLUE + message)
 
+def confirm_prompt(message):
+    response = input(message).strip().lower()
+    if response in ('y', 'yes'):
+        return True
+    return False
+
 # Class for table template which can be printed
 class Table():
     INDEX_COLUMN_WIDTH = 8
