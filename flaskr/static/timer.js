@@ -39,5 +39,16 @@ function stopTimer() {
 }
 
 function updateTimer() {
-	timer.textContent = Date.now() - startTime;
+	const timeInMilliseconds = Date.now() - startTime;
+	const milliseconds = timeInMilliseconds % 1000;
+	const seconds = Math.floor(timeInMilliseconds / 1000) % 60;
+	const minutes = Math.floor(timeInMilliseconds / 1000 / 60) % 60;
+	const hours = Math.floor(timeInMilliseconds / 1000 / 60 / 60);
+
+	let display = "";
+	if (minutes) {
+		display += String(minutes) + ".";
+	}
+	display += String(seconds).padStart(2, "0") + "." + String(milliseconds).padStart(3, "0");
+	timer.textContent = display;
 }
