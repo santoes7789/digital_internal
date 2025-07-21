@@ -1,40 +1,58 @@
-let startTime, updateInterval, active = false, finished = true;
+let startTime, updateInterval, timeoutId;
+let timerState = "finished";
+const waitTime = 500;
+
+// Stopped, waiting, ready, active, finished 
 timer = document.getElementById("timer");
 document.addEventListener("keydown", function(event) {
-	if (active && !finished) {
-		active = false
+	if (timerState == "finished") {
+		waitTimer();
+	} else if (timerState == "active") {
 		stopTimer();
-	}
-	if (!active && finished && event.code == "Space") {
-		readyTimer();
 	}
 });
 
 document.addEventListener("keyup", function(event) {
-	if (!active && finished) {
+	if (timerState == "waiting") {
+		resetTimer();
+	} else if (timerState == "ready") {
 		startTimer();
-	} else {
-		startTime = null;
-		finished = true;
-	}
 
+	} else if (timerState == "active" || timerState == "stopped") {
+		resetTimer();
+	}
 });
 
-function readyTimer() {
+function waitTimer() {
+	timerState = "waiting"
 	timer.style.color = "red";
+	timeoutId = setTimeout(readyTimer, waitTime);
+}
+
+function readyTimer() {
+	timerState = "ready";
+	timer.style.color = "green";
+	timer.textContent = "00.000";
 }
 
 function startTimer() {
-	finished = false;
-	active = true;
+	timerState = "active";
 	timer.style.color = "black";
+
 	startTime = Date.now();
 	updateInterval = setInterval(updateTimer, 10);
 }
 
+function resetTimer() {
+	timerState = "finished";
+	timer.style.color = "black";
+	clearTimeout(timeoutId);
+	clearInterval(updateInterval)
+}
+
 function stopTimer() {
-	active = false;
-	updateTimer()
+	timerState = "stopped";
+	updateTimer() //Update final time
 	clearInterval(updateInterval)
 }
 
