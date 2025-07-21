@@ -6,6 +6,7 @@ from . import db
 
 auth = Blueprint("auth", __name__)
 
+
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -26,10 +27,40 @@ def signup():
         elif len(password1) < 7:
             flash("Password must be at least 7 characters.", category="error")
         else:
-            new_user = User(email=email, username=username, password=generate_password_hash(password1, method="scrypt:32768:8:1"))
+            new_user = User(email=email, username=username, password=generate_password_hash(
+                password1, method="scrypt:32768:8:1"))
             db.session.add(new_user)
             db.session.commit()
+            login_user(new_user)
             print("New user created")
             flash("Account created!", category="success")
+            return redirect(url_for("views.timer"))
 
     return render_template("signup.html", user=current_user)
+
+
+@auth.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                flash("Signed in", category="success")
+                login_user(user)
+                return redirect(url_for("views.timer"))
+            else:
+                flash("Incorrect Password.", category="error")
+        else:
+            flash("Username does not exist.", category="error")
+
+    return render_template("login.html", user=current_user)
+
+
+@auth.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("views.home"))
