@@ -1,11 +1,49 @@
-let startTime, updateInterval, timeoutId;
-let timerState = "finished";
+let times = [];
+
+function addTime(time) {
+	times.push({ "date": Date.now(), "value": time })
+
+	const best = getBest();
+	const ao5 = getAoX(5);
+	const ao12 = getAoX(12);
+
+	const bestText = best ? millisecondsToTime(best) : "--";
+	const ao5Text = ao5 ? millisecondsToTime(ao5) : "--";
+	const ao12Text = ao12 ? millisecondsToTime(ao12) : "--";
+
+	document.getElementById("best-text").textContent = bestText;
+	document.getElementById("ao5-text").textContent = ao5Text;
+	document.getElementById("ao12-text").textContent = ao12Text;
+}
+
+function getBest() {
+	const timesOnlyArray = times.map(time => time["value"]);
+	return Math.min(...timesOnlyArray);
+}
+
+function getAoX(x) {
+	if (times.length < x) {
+		return null;
+	}
+	const lastFive = times.slice(-x).map(time => time["value"]);
+	lastFive.sort((a, b) => a - b);
+	console.log(lastFive);
+
+	let sum = 0;
+	for (let i = 1; i < (x - 1); i++) {
+		sum += lastFive[i];
+	}
+	return sum / (x - 2);
+}
+
+
+let startTime, updateInterval, timeoutId, timerState = "finished";
 const waitTime = 500;
 
-// Stopped, waiting, ready, active, finished 
-timer = document.getElementById("timer");
+const timer = document.getElementById("timer");
+
 document.addEventListener("keydown", function(event) {
-	if (timerState == "finished") {
+	if (timerState == "finished" && event.code == "Space") {
 		waitTimer();
 	} else if (timerState == "active") {
 		stopTimer();
@@ -15,7 +53,7 @@ document.addEventListener("keydown", function(event) {
 document.addEventListener("keyup", function(event) {
 	if (timerState == "waiting") {
 		resetTimer();
-	} else if (timerState == "ready") {
+	} else if (timerState == "ready" && event.code == "Space") {
 		startTimer();
 
 	} else if (timerState == "active" || timerState == "stopped") {
@@ -52,21 +90,30 @@ function resetTimer() {
 
 function stopTimer() {
 	timerState = "stopped";
-	updateTimer() //Update final time
+	const time = updateTimer() // Update final time
+	addTime(time);
 	clearInterval(updateInterval)
+
 }
 
 function updateTimer() {
 	const timeInMilliseconds = Date.now() - startTime;
-	const milliseconds = timeInMilliseconds % 1000;
-	const seconds = Math.floor(timeInMilliseconds / 1000) % 60;
-	const minutes = Math.floor(timeInMilliseconds / 1000 / 60) % 60;
-	const hours = Math.floor(timeInMilliseconds / 1000 / 60 / 60);
+	timer.textContent = millisecondsToTime(timeInMilliseconds);
+	return timeInMilliseconds;
+}
 
-	let display = "";
+
+function millisecondsToTime(milli) {
+	const milliseconds = Math.floor(milli % 1000);
+	const seconds = Math.floor(milli / 1000) % 60;
+	const minutes = Math.floor(milli / 1000 / 60) % 60;
+	// const hours = Math.floor(milliseconds / 1000 / 60 / 60);
+
+	let str = "";
 	if (minutes) {
-		display += String(minutes) + ".";
+		str += String(minutes) + ":";
 	}
-	display += String(seconds).padStart(2, "0") + "." + String(milliseconds).padStart(3, "0");
-	timer.textContent = display;
+	str += String(seconds).padStart(2, "0") + "." + String(milliseconds).padStart(3, "0");
+	return str;
+
 }
