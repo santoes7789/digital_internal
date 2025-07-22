@@ -9,7 +9,7 @@ p {
 
 .timetable-wrapper {
 	max-height: 30vh;
-	width: 150px;
+	scrollbar-width: none;
 }
 
 #timer {
