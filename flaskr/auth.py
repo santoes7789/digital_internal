@@ -62,5 +62,6 @@ def login():
 @auth.route("/logout")
 @login_required
 def logout():
+    flash("Signed out", category="success")
     logout_user()
-    return redirect(url_for("views.home"))
+    return redirect(url_for("views.timer"))

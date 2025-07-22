@@ -12,7 +12,7 @@
 		<title>Cube timer</title>
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg fixed-top">
+		<nav class="fixed-top navbar navbar-expand-lg z-1">
 			<div class="container-fluid mx-3">
 				<div class="d-flex align-items-center">
 					<a class="navbar-brand" href="/timer">Cube timer</a>
@@ -20,13 +20,16 @@
 
 				{% if user.is_authenticated %}
 					<div class="d-flex align-items-center">
-					<a class="nav-link ms-4" href="/timer">{{user.username}}</a>
+						<a class="nav-link mx-2" href="/timer">{{user.username}}</a>
+						<div class="vr"></div>
+						<a class="nav-link mx-2" href="/logout">Log out</a>
 					</div>
 					
 				{% else %}
 					<div class="d-flex align-items-center">
-						<a class="nav-link" href="/login">Log In</a>
-						<a class="nav-link ms-4" href="/signup">Sign Up</a>
+						<a class="nav-link mx-2" href="/login">Log In</a>
+						<div class="vr"></div>
+						<a class="nav-link mx-2" href="/signup">Sign Up</a>
 					</div>
 				{% endif %}
 			</div>
@@ -36,14 +39,14 @@
 		{% if messages %}
 			{% for category, message in messages %}
 				{% if category == "error" %}
-					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<div class="alert alert-danger alert-dismissible fade show fixed-top mt-5" role="alert">
 						{{message}}
-						<button type="button" class="btn-close" data-dismiss="alert"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 					</div>
 				{% else %}
-					<div class="alert alert-success alert-dismissible fade show" role="alert">
+					<div class="alert alert-success alert-dismissible fade show fixed-top mt-5" role="alert">
 						{{message}}
-						<button type="button" class="btn-close" data-dismiss="alert"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 					</div>
 				{% endif %}
 			{% endfor %}
