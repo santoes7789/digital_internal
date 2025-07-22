@@ -2,14 +2,16 @@
 
 {% block content %}
 	<div class="d-flex justify-content-center align-items-center vh-100">
-		<form method="POST" class="form-signup text-center">
-				<h1 class="mb-2">Sign up</h1>
+		<div class="shadow-lg p-4 rounded-4 mb-5">
+			<form method="POST" class="form-signup text-center">
+				<h1 class="m-5">Sign up</h1>
 				<input type="text" id="username" name="username" class="form-control" placeholder="Username"  required>
 				<input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
 				<input type="password" id="password1" name="password1" class="form-control" placeholder="Password" required>
 				<input type="password" id="password2" name="password2" class="form-control" placeholder="Confirm password" required>
 
-				<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Create Account!</button>
-		</form>
+				<button class="btn btn-lg btn-primary btn-block my-4" type="submit">Create Account!</button>
+			</form>
+		</div>
 	</div>
 {% endblock %}

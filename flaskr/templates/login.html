@@ -2,11 +2,13 @@
 
 {% block content %}
 <div class="d-flex justify-content-center align-items-center vh-100">
-	<form method="POST" class="form-login text-center">
-			<h1 class="mb-2">Log in</h1>
-			<input type="email" id="email" name="email" class="form-control" placeholder="Email Address" required autofocus>
+	<div class="shadow-lg p-4 rounded-4 mb-5">
+		<form method="POST" class="form-login text-center">
+			<h1 class="m-5">Login</h1>
+			<input type="email" id="email" name="email" class="form-control" placeholder="Email Address" required>
 			<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-			<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">Log in</button>
-	</form>
+			<button class="btn btn-lg btn-primary btn-block w-100 my-4" type="submit">LOGIN</button>
+		</form>
+	</div>
 </div>
 {% endblock %}
