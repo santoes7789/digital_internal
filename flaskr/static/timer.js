@@ -1,13 +1,75 @@
 let times = [];
+let is_authenticated = false;
+
+
+fetch("/check-auth", {
+	method: "GET",
+	headers: {
+		"Content-Type": "application/json",
+	},
+}).then(response => response.json())
+	.then(data => {
+		is_authenticated = data["authenticated"];
+		if (is_authenticated) {
+			console.log("User is authenticated")
+			fetchData()
+		}
+	})
+
+function fetchData() {
+	fetch("/times", {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	})
+		.then(response => {
+			if (response.status == 200) {
+				return response.json()
+			} else {
+				return null;
+			}
+		}).then(data => {
+			if (data) {
+				times = data;
+				updateStats()
+			}
+		})
+		.catch(error => {
+			console.error("Error:", error);
+		})
+
+}
+
 
 function addTime(time) {
-	times.push({ "date": Date.now(), "value": time })
+	const newTime = { "date": Date.now(), "value": time };
+	times.push(newTime)
+
+	if (is_authenticated) {
+		fetch("/times", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(newTime)
+		})
+			.then(response => {
+				if (response.status == 204) {
+					console.log("Sucessfully sent new time to server")
+				} else {
+					console.log("Failed to send new time to server")
+				}
+			}).catch(error => {
+				console.error("Error:", error);
+			})
+
+	}
 	updateStats()
 }
 
 
 function updateStats() {
-
 	const best = getBest();
 	const ao5 = getAoX(5);
 	const ao12 = getAoX(12);
@@ -20,16 +82,21 @@ function updateStats() {
 	document.getElementById("ao5-text").textContent = ao5Text;
 	document.getElementById("ao12-text").textContent = ao12Text;
 
-	const table = document.getElementById("timer-table");
-	// Insert a new row at the end of the table (-1 or omitted index)
-	const newRow = table.insertRow(1);
+	const table = document.getElementById("time-table-body");
+	table.innerHTML = "";
+	table.insertRow(0); // for the line between header and other
 
-	// Insert new cells into the new row
-	const indexCell = newRow.insertCell(0); // Insert at index 0
-	const timeCell = newRow.insertCell(1); //cell1 = new
+	for (let i = 0; i < times.length; i++) {
+		// Insert a new row at the end of the table (-1 or omitted index)
+		const newRow = table.insertRow(0);
 
-	indexCell.textContent = times.length;
-	timeCell.textContent = millisecondsToTime(times.at(-1)["value"]);
+		// Insert new cells into the new row
+		const indexCell = newRow.insertCell(0); // Insert at index 0
+		const timeCell = newRow.insertCell(1);
+
+		indexCell.textContent = i + 1;
+		timeCell.textContent = millisecondsToTime(times.at(i)["value"]);
+	}
 
 }
 
@@ -44,13 +111,12 @@ function getAoX(x) {
 	if (times.length < x) {
 		return null;
 	}
-	const lastFive = times.slice(-x).map(time => time["value"]);
-	lastFive.sort((a, b) => a - b);
-	console.log(lastFive);
+	const lastX = times.slice(-x).map(time => time["value"]);
+	lastX.sort((a, b) => a - b);
 
 	let sum = 0;
 	for (let i = 1; i < (x - 1); i++) {
-		sum += lastFive[i];
+		sum += lastX[i];
 	}
 	return sum / (x - 2);
 }

@@ -13,7 +13,7 @@
 	</head>
 	<body>
 		<nav class="fixed-top navbar navbar-expand-lg z-1">
-			<div class="container-fluid mx-3">
+			<div class="container-fluid px-0 mx-3">
 				<div class="d-flex align-items-center">
 					<a class="navbar-brand" href="/timer">Cube timer</a>
 				</div>
@@ -22,14 +22,14 @@
 					<div class="d-flex align-items-center">
 						<a class="nav-link mx-2" href="/timer">{{user.username}}</a>
 						<div class="vr"></div>
-						<a class="nav-link mx-2" href="/logout">Log out</a>
+						<a class="nav-link ms-2" href="/logout">Log out</a>
 					</div>
 					
 				{% else %}
 					<div class="d-flex align-items-center">
 						<a class="nav-link mx-2" href="/login">Log In</a>
 						<div class="vr"></div>
-						<a class="nav-link mx-2" href="/signup">Sign Up</a>
+						<a class="nav-link ms-2" href="/signup">Sign Up</a>
 					</div>
 				{% endif %}
 			</div>
@@ -56,6 +56,7 @@
 
 		{% block content %}
 		{% endblock %}
+
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

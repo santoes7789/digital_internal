@@ -22,7 +22,7 @@ def create_app():
     app.register_blueprint(auth, url_prefix="/")
 
     # setup database
-    from .models import User
+    from .models import User, Time
     with app.app_context():
         db.create_all()
 
