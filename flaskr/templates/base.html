@@ -39,12 +39,12 @@
 		{% if messages %}
 			{% for category, message in messages %}
 				{% if category == "error" %}
-					<div class="alert alert-danger alert-dismissible fade show fixed-top mt-5" role="alert">
+					<div class="alert alert-danger alert-dismissible fade show fixed-top" role="alert">
 						{{message}}
 						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 					</div>
 				{% else %}
-					<div class="alert alert-success alert-dismissible fade show fixed-top mt-5" role="alert">
+					<div class="alert alert-success alert-dismissible fade show fixed-top" role="alert">
 						{{message}}
 						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 					</div>

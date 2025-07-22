@@ -7,6 +7,10 @@ p {
 	line-height: 0.5;
 }
 
+.alert {
+	margin-top: 56px;
+}
+
 .form-container {
 	width: 500px;
 	margin: 1.5rem;
