@@ -126,6 +126,7 @@ let startTime, updateInterval, timeoutId, timerState = "finished";
 const waitTime = 500;
 
 const timer = document.getElementById("timer");
+const timerBackground = document.getElementById("timer-background");
 
 document.addEventListener("keydown", function(event) {
 	if (timerState == "finished" && event.code == "Space") {
@@ -156,6 +157,7 @@ function readyTimer() {
 	timerState = "ready";
 	timer.style.color = "green";
 	timer.textContent = "00.000";
+	timerBackground.style.zIndex = 10;
 }
 
 function startTimer() {
@@ -176,6 +178,7 @@ function resetTimer() {
 function stopTimer() {
 	timerState = "stopped";
 	const time = updateTimer() // Update final time
+	timerBackground.style.zIndex = 0;
 	addTime(time);
 	clearInterval(updateInterval)
 
