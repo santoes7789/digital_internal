@@ -6,12 +6,7 @@ from . import db
 views = Blueprint("views", __name__)
 
 
-@views.route
-@views.route("/home")
-def home():
-    return render_template("home.html", user=current_user)
-
-
+@views.route("/")
 @views.route("/timer")
 def timer():
     return render_template("timer.html", user=current_user)
