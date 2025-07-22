@@ -7,6 +7,11 @@ p {
 	line-height: 0.5;
 }
 
+.timetable-wrapper {
+	max-height: 30vh;
+	width: 150px;
+}
+
 #timer {
 	font-family: monospace;
 }

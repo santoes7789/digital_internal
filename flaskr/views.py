@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from flask_login import current_user
 
 views = Blueprint("views", __name__)
 
@@ -6,9 +7,9 @@ views = Blueprint("views", __name__)
 @views.route("/")
 @views.route("/home")
 def home():
-    return render_template("home.html")
+    return render_template("home.html", user=current_user)
 
 
 @views.route("/timer")
 def timer():
-    return render_template("timer.html")
+    return render_template("timer.html", user=current_user)

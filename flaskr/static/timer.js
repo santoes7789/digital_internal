@@ -2,6 +2,11 @@ let times = [];
 
 function addTime(time) {
 	times.push({ "date": Date.now(), "value": time })
+	updateStats()
+}
+
+
+function updateStats() {
 
 	const best = getBest();
 	const ao5 = getAoX(5);
@@ -14,7 +19,21 @@ function addTime(time) {
 	document.getElementById("best-text").textContent = bestText;
 	document.getElementById("ao5-text").textContent = ao5Text;
 	document.getElementById("ao12-text").textContent = ao12Text;
+
+	const table = document.getElementById("timer-table");
+	// Insert a new row at the end of the table (-1 or omitted index)
+	const newRow = table.insertRow(1);
+
+	// Insert new cells into the new row
+	const indexCell = newRow.insertCell(0); // Insert at index 0
+	const timeCell = newRow.insertCell(1); //cell1 = new
+
+	indexCell.textContent = times.length;
+	timeCell.textContent = millisecondsToTime(times.at(-1)["value"]);
+
 }
+
+
 
 function getBest() {
 	const timesOnlyArray = times.map(time => time["value"]);
