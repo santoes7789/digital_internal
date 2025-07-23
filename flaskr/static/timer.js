@@ -118,6 +118,8 @@ function updateStats() {
 	document.getElementById("ao5-text").textContent = ao5Text;
 	document.getElementById("ao12-text").textContent = ao12Text;
 
+
+
 	const table = document.getElementById("time-table-body");
 	table.innerHTML = "";
 	table.insertRow(0); // for the line between header and other
@@ -143,18 +145,21 @@ function updateStats() {
 			console.log("hello");
 
 			// Update the modal's content.
-			const modalTitle = timeModal.querySelector(".modal-title")
-			const timeHeading = timeModal.querySelector(".time-heading")
+			const modalTitle = timeModal.querySelector(".modal-title");
+			const timeHeading = timeModal.querySelector(".time-heading");
+			const dateText = timeModal.querySelector(".date-text");
+			const timeText = timeModal.querySelector(".time-text");
 
 			current_time_selected = times.at(i);
 
 			modalTitle.textContent = "Solve No. " + (i + 1);
 			timeHeading.textContent = time;
 
+			date = new Date(times.at(i)["timestamp"]);
+			dateText.textContent = date.toDateString();
+			timeText.textContent = date.toTimeString().split(' ')[0];
 		})
-
 	}
-
 }
 
 
