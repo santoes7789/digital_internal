@@ -68,7 +68,7 @@ function addTime(time) {
 	updateStats()
 }
 
-
+const timeModal = document.getElementById("time-info-modal");
 function updateStats() {
 	const best = getBest();
 	const ao5 = getAoX(5);
@@ -90,12 +90,32 @@ function updateStats() {
 		// Insert a new row at the end of the table (-1 or omitted index)
 		const newRow = table.insertRow(0);
 
+		const time = millisecondsToTime(times.at(i)["value"]);
+
+		newRow.setAttribute("type", "button");
+		newRow.setAttribute("data-bs-toggle", "modal");
+		newRow.setAttribute("data-bs-target", "#time-info-modal");
+
 		// Insert new cells into the new row
 		const indexCell = newRow.insertCell(0); // Insert at index 0
 		const timeCell = newRow.insertCell(1);
 
 		indexCell.textContent = i + 1;
-		timeCell.textContent = millisecondsToTime(times.at(i)["value"]);
+		timeCell.textContent = time;
+
+		newRow.addEventListener("click", event => {
+			console.log("hello");
+
+			// Update the modal's content.
+			const modalTitle = timeModal.querySelector(".modal-title")
+			const timeHeading = timeModal.querySelector(".time-heading")
+
+
+			modalTitle.textContent = "Solve No. " + (i + 1);
+			timeHeading.textContent = time;
+
+		})
+
 	}
 
 }

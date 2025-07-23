@@ -13,7 +13,7 @@
 	</div>
 
 	<div class="element-container bottom-0 end-0 m-3 overflow-auto timetable-wrapper">
-		<table class="table table-sm">
+		<table class="table table-sm table-hover">
 			<thead class="sticky-top">
 				<tr>
 					<th scope="col">#</th>
@@ -22,10 +22,34 @@
 			</thead>
 
 			<tbody id="time-table-body">
-				<tr></tr>
+				<tr>
+				</tr>
 			</tbody>
 		</table>
 	</div>
+
+
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="time-info-modal" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5">Modal title</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<h1 class="time-heading">1.00</h1>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 
 	<script src="static/timer.js"></script>
