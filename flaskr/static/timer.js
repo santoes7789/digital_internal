@@ -44,7 +44,6 @@ function fetchData() {
 
 function addTime(time) {
 	const newTime = { "timestamp": Date.now(), "value": time };
-	current_time_selected = newTime;
 	times.push(newTime)
 
 	if (is_authenticated) {
@@ -70,7 +69,12 @@ function addTime(time) {
 }
 
 function deleteTime(time) {
-	times = times.filter(obj => obj["timestamp"] !== time["timestamp"])
+	const index = times.indexOf(time);
+
+	console.log(index);
+	if (index == -1) return;
+
+	times.splice(index, 1);
 	fetch("/times", {
 		method: "DELETE",
 		headers: {
@@ -183,8 +187,12 @@ const timerBackground = document.getElementById("timer-background");
 const timerFading = document.getElementById("fading-bg");
 
 document.addEventListener("keydown", function(event) {
-	if (timerState == "finished" && event.code == "Space") {
-		waitTimer();
+	if (timerState == "finished") {
+		if (event.code == "Space") {
+			waitTimer();
+		} else if (event.shiftKey && event.code == "Backspace") {
+			deleteTime(times.at(-1));
+		}
 	} else if (timerState == "active") {
 		stopTimer();
 	}
@@ -210,7 +218,7 @@ function waitTimer() {
 function readyTimer() {
 	timerState = "ready";
 	timer.style.color = "green";
-	timer.textContent = "00.000";
+	timer.textContent = "0.000";
 	timerBackground.style.zIndex = 10;
 	timerFading.classList.add("show");
 
