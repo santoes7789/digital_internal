@@ -209,7 +209,7 @@ document.addEventListener("keyup", function(event) {
 	} else if (timerState == "ready" && event.code == "Space") {
 		startTimer();
 
-	} else if (timerState == "active" || timerState == "stopped") {
+	} else if (timerState == "stopped") {
 		resetTimer();
 	}
 });
