@@ -227,7 +227,7 @@ function millisecondsToTime(milli) {
 	if (minutes) {
 		str += String(minutes) + ":";
 	}
-	str += String(seconds).padStart(2, "0") + "." + String(milliseconds).padStart(3, "0");
+	str += String(seconds) + "." + String(milliseconds).padStart(3, "0");
 	return str;
 
 }
