@@ -43,7 +43,8 @@ function fetchData() {
 
 
 function addTime(time) {
-	const newTime = { "date": Date.now(), "value": time };
+	const newTime = { "timestamp": Date.now(), "value": time };
+	current_time_selected = newTime;
 	times.push(newTime)
 
 	if (is_authenticated) {
@@ -68,7 +69,38 @@ function addTime(time) {
 	updateStats()
 }
 
+function deleteTime(time) {
+	times = times.filter(obj => obj["timestamp"] !== time["timestamp"])
+	fetch("/times", {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(time)
+	})
+		.then(response => {
+			if (response.status == 204) {
+				console.log("Sucessfully deleted time on server")
+			} else {
+				console.log("Failed to delete time on server")
+			}
+		}).catch(error => {
+			console.error("Error:", error);
+		})
+
+	updateStats()
+}
+
+
+
+
 const timeModal = document.getElementById("time-info-modal");
+let current_time_selected;
+const deleteTimeBtn = document.getElementById("delete-time-btn");
+deleteTimeBtn.addEventListener("click", event => {
+	deleteTime(current_time_selected);
+})
+
 function updateStats() {
 	const best = getBest();
 	const ao5 = getAoX(5);
@@ -110,6 +142,7 @@ function updateStats() {
 			const modalTitle = timeModal.querySelector(".modal-title")
 			const timeHeading = timeModal.querySelector(".time-heading")
 
+			current_time_selected = times.at(i);
 
 			modalTitle.textContent = "Solve No. " + (i + 1);
 			timeHeading.textContent = time;
