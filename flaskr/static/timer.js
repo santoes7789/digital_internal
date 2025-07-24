@@ -204,6 +204,7 @@ function updateStats() {
 
 
 function getBest() {
+	if (current_times.length == 0) return null;
 	const timesOnlyArray = current_times.map(time => time["value"]);
 	return Math.min(...timesOnlyArray);
 }
