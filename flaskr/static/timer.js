@@ -1,5 +1,6 @@
 let times = [];
 let current_session = "3x3";
+const sessions = ["2x2", "3x3", "4x4", "5x5"];
 let is_authenticated = false;
 
 
@@ -106,6 +107,21 @@ deleteTimeBtn.addEventListener("click", event => {
 	deleteTime(current_time_selected);
 })
 
+function updateSessions() {
+	document.getElementById("session-text").textContent = current_session;
+	const sessionDropdown = document.getElementById("session-dropdown");
+	sessionDropdown.innerHTML = "";
+	for (let i = 0; i < sessions.length; i++) {
+		const newLi = document.createElement("li");
+		const newP = document.createElement("p");
+		newP.classList.add("dropdown-item");
+		newP.textContent = sessions[i];
+
+		newLi.appendChild(newP);
+		sessionDropdown.appendChild(newLi);
+	}
+}
+
 function updateStats() {
 	const best = getBest();
 	const ao5 = getAoX(5);
@@ -118,7 +134,6 @@ function updateStats() {
 	document.getElementById("best-text").textContent = bestText;
 	document.getElementById("ao5-text").textContent = ao5Text;
 	document.getElementById("ao12-text").textContent = ao12Text;
-
 
 
 	const table = document.getElementById("time-table-body");
