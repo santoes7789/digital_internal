@@ -37,6 +37,10 @@ p {
 	font-size: 0.8rem;
 }
 
+.no-min-width {
+	min-width: 0;
+}
+
 #timer {
 	font-family: monospace;
 }
