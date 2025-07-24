@@ -126,6 +126,13 @@ deleteTimeBtn.addEventListener("click", event => {
 	deleteTime(current_time_selected);
 })
 
+function changeSession(session) {
+	current_session = session;
+	current_times = all_times[current_session];
+	updateSessions();
+	updateStats();
+
+}
 function updateSessions() {
 	document.getElementById("session-text").textContent = current_session;
 	const sessionDropdown = document.getElementById("session-dropdown");
@@ -135,9 +142,12 @@ function updateSessions() {
 		const newP = document.createElement("p");
 		newP.classList.add("dropdown-item");
 		newP.textContent = key;
-
 		newLi.appendChild(newP);
 		sessionDropdown.appendChild(newLi);
+
+		newLi.addEventListener("click", event => {
+			changeSession(key);
+		})
 	}
 }
 
