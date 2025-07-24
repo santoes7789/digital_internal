@@ -21,6 +21,7 @@ def times():
         db.session.add(new_time)
         db.session.commit()
         return "", 204
+
     elif request.method == "DELETE":
         data = request.get_json()
         print(data)
@@ -34,10 +35,12 @@ def times():
             return jsonify({"error": "Time not found"}), 404
 
     else:
-        times_list = []
+        times_list = {}
         if current_user.is_authenticated:
             for time in current_user.times:
-                times_list.append(
+                if time.session not in times_list:
+                    times_list[time.session] = []
+                times_list[time.session].append(
                     {"timestamp": time.timestamp, "value": time.value})
             return jsonify(times_list), 200
         else:

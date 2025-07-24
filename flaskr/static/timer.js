@@ -1,8 +1,16 @@
-let times = [];
+let all_times = {
+	"2x2": [],
+	"3x3": [],
+	"4x4": [],
+	"5x5": [],
+}
 let current_session = "3x3";
+let current_times = all_times[current_session];
+
 const sessions = ["2x2", "3x3", "4x4", "5x5"];
 let is_authenticated = false;
 
+updateSessions();
 
 fetch("/check-auth", {
 	method: "GET",
@@ -13,8 +21,8 @@ fetch("/check-auth", {
 	.then(data => {
 		is_authenticated = data["authenticated"];
 		if (is_authenticated) {
-			console.log("User is authenticated")
-			fetchData()
+			console.log("User is authenticated");
+			fetchData();
 		}
 	})
 
@@ -27,14 +35,16 @@ function fetchData() {
 	})
 		.then(response => {
 			if (response.status == 200) {
-				return response.json()
+				return response.json();
 			} else {
 				return null;
 			}
 		}).then(data => {
 			if (data) {
-				times = data;
-				updateStats()
+				Object.assign(all_times, data);
+				current_times = all_times[current_session];
+				updateSessions();
+				updateStats();
 			}
 		})
 		.catch(error => {
@@ -45,8 +55,10 @@ function fetchData() {
 
 
 function addTime(time) {
-	const newTime = { "timestamp": Date.now(), "value": time, "session": current_session };
-	times.push(newTime)
+	const newTime = { "timestamp": Date.now(), "value": time };
+	current_times.push(newTime);
+
+	newTime["session"] = current_session;
 
 	if (is_authenticated) {
 		fetch("/times", {
@@ -71,12 +83,12 @@ function addTime(time) {
 }
 
 function deleteTime(time) {
-	const index = times.indexOf(time);
+	const index = current_times.indexOf(time);
 
 	console.log(index);
 	if (index == -1) return;
 
-	times.splice(index, 1);
+	current_times.splice(index, 1);
 	if (is_authenticated) {
 		fetch("/times", {
 			method: "DELETE",
@@ -87,9 +99,9 @@ function deleteTime(time) {
 		})
 			.then(response => {
 				if (response.status == 204) {
-					console.log("Sucessfully deleted time on server")
+					console.log("Sucessfully deleted time on server");
 				} else {
-					console.log("Failed to delete time on server")
+					console.log("Failed to delete time on server");
 				}
 			}).catch(error => {
 				console.error("Error:", error);
@@ -101,6 +113,13 @@ function deleteTime(time) {
 
 
 const timeModal = document.getElementById("time-info-modal");
+const modalTitle = timeModal.querySelector(".modal-title");
+const timeHeading = timeModal.querySelector(".time-heading");
+const dateText = timeModal.querySelector(".date-text");
+const timeText = timeModal.querySelector(".time-text");
+
+const table = document.getElementById("time-table-body");
+
 let current_time_selected;
 const deleteTimeBtn = document.getElementById("delete-time-btn");
 deleteTimeBtn.addEventListener("click", event => {
@@ -111,11 +130,11 @@ function updateSessions() {
 	document.getElementById("session-text").textContent = current_session;
 	const sessionDropdown = document.getElementById("session-dropdown");
 	sessionDropdown.innerHTML = "";
-	for (let i = 0; i < sessions.length; i++) {
+	for (const key in all_times) {
 		const newLi = document.createElement("li");
 		const newP = document.createElement("p");
 		newP.classList.add("dropdown-item");
-		newP.textContent = sessions[i];
+		newP.textContent = key;
 
 		newLi.appendChild(newP);
 		sessionDropdown.appendChild(newLi);
@@ -136,15 +155,14 @@ function updateStats() {
 	document.getElementById("ao12-text").textContent = ao12Text;
 
 
-	const table = document.getElementById("time-table-body");
 	table.innerHTML = "";
 	table.insertRow(0); // for the line between header and other
 
-	for (let i = 0; i < times.length; i++) {
+	for (let i = 0; i < current_times.length; i++) {
 		// Insert a new row at the end of the table (-1 or omitted index)
 		const newRow = table.insertRow(0);
 
-		const time = millisecondsToTime(times.at(i)["value"]);
+		const time = millisecondsToTime(current_times.at(i)["value"]);
 
 		newRow.setAttribute("type", "button");
 		newRow.setAttribute("data-bs-toggle", "modal");
@@ -161,17 +179,12 @@ function updateStats() {
 			console.log("hello");
 
 			// Update the modal's content.
-			const modalTitle = timeModal.querySelector(".modal-title");
-			const timeHeading = timeModal.querySelector(".time-heading");
-			const dateText = timeModal.querySelector(".date-text");
-			const timeText = timeModal.querySelector(".time-text");
-
-			current_time_selected = times.at(i);
+			current_time_selected = current_times.at(i);
 
 			modalTitle.textContent = "Solve No. " + (i + 1);
 			timeHeading.textContent = time;
 
-			date = new Date(times.at(i)["timestamp"]);
+			date = new Date(current_times.at(i)["timestamp"]);
 			dateText.textContent = date.toDateString();
 			timeText.textContent = date.toTimeString().split(' ')[0];
 		})
@@ -181,15 +194,15 @@ function updateStats() {
 
 
 function getBest() {
-	const timesOnlyArray = times.map(time => time["value"]);
+	const timesOnlyArray = current_times.map(time => time["value"]);
 	return Math.min(...timesOnlyArray);
 }
 
 function getAoX(x) {
-	if (times.length < x) {
+	if (current_times.length < x) {
 		return null;
 	}
-	const lastX = times.slice(-x).map(time => time["value"]);
+	const lastX = current_times.slice(-x).map(time => time["value"]);
 	lastX.sort((a, b) => a - b);
 
 	let sum = 0;
@@ -212,7 +225,7 @@ document.addEventListener("keydown", function(event) {
 		if (event.code == "Space") {
 			waitTimer();
 		} else if (event.shiftKey && event.code == "Backspace") {
-			deleteTime(times.at(-1));
+			deleteTime(current_times.at(-1));
 		}
 	} else if (timerState == "active") {
 		stopTimer();
