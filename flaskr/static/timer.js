@@ -1,4 +1,5 @@
 let times = [];
+let current_session = "3x3";
 let is_authenticated = false;
 
 
@@ -43,7 +44,7 @@ function fetchData() {
 
 
 function addTime(time) {
-	const newTime = { "timestamp": Date.now(), "value": time };
+	const newTime = { "timestamp": Date.now(), "value": time, "session": current_session };
 	times.push(newTime)
 
 	if (is_authenticated) {

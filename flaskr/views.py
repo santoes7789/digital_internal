@@ -17,10 +17,9 @@ def times():
     if request.method == "POST":
         data = request.get_json()
         new_time = Time(
-            timestamp=data["timestamp"], value=data["value"], user_id=current_user.id)
+            timestamp=data["timestamp"], value=data["value"], user_id=current_user.id, session=data["session"])
         db.session.add(new_time)
         db.session.commit()
-        print("added new time")
         return "", 204
     elif request.method == "DELETE":
         data = request.get_json()
