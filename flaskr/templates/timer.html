@@ -6,33 +6,34 @@
 		<div class="position-absolute z-0 w-100 h-100 bg-body fade" id="fading-bg"></div>
 	</div>
 
-	<div class="position-fixed d-flex bottom-0 justify-content-between align-items-end p-3 vw-100">
-		<div>
-			<p>best: <strong id="best-text">--</strong></p>
-			<p>ao5: <strong id="ao5-text">--</strong></p>
-			<p>ao12: <strong id="ao12-text">--</strong></p>
-		</div>
+	<div class="position-fixed bottom-0 start-0">
+		<p>best: <strong id="best-text">--</strong></p>
+		<p>ao5: <strong id="ao5-text">--</strong></p>
+		<p>ao12: <strong id="ao12-text">--</strong></p>
+	</div>
+
+	<div class="position-fixed d-flex bottom-0 vw-100 justify-content-center">
 		<div class="dropup">
 			<p class="d-inline">session:</p>
 			<strong id="session-text" type="button" class="dropdown-toggle" data-bs-toggle="dropdown">3x3</strong>
 			<ul class="dropdown-menu no-min-width" id="session-dropdown">
 			</ul>
 		</div>
+	</div>
 
-		<div class="overflow-auto timetable-wrapper">
-			<table class="table table-sm table-hover">
-				<thead class="sticky-top">
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">Time</th>
-					</tr>
-				</thead>
-				<tbody id="time-table-body">
-					<tr>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+	<div class="position-fixed bottom-0 end-0 overflow-auto timetable-wrapper">
+		<table class="table table-sm table-hover">
+			<thead class="sticky-top">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Time</th>
+				</tr>
+			</thead>
+			<tbody id="time-table-body">
+				<tr>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<!-- Modal -->
