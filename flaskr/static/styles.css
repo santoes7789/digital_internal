@@ -14,14 +14,6 @@ p {
 	margin: 0;
 }
 
-.element-container {
-	position: fixed;
-	/* box-shadow: var(--bs-box-shadow-lg); */
-	/* border-radius: var(--bs-border-radius-lg); */
-	/* border: var(--bs-border-width) var(--bs-border-style) var(--bs-secondary-border-subtle); */
-	/* padding: 1rem; */
-}
-
 .alert {
 	margin-top: 56px;
 }
