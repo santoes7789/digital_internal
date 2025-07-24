@@ -28,6 +28,11 @@ p {
 	margin-bottom: 1.5rem;
 }
 
+.element-container {
+	position: fixed;
+	margin: 0.5rem;
+}
+
 .timetable-wrapper {
 	max-height: 30vh;
 	scrollbar-width: none;
