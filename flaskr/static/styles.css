@@ -11,7 +11,6 @@ h4 {
 }
 
 p {
-	font-size: 0.8rem;
 	margin: 0;
 }
 
@@ -40,6 +39,10 @@ p {
 .timetable-wrapper {
 	max-height: 30vh;
 	scrollbar-width: none;
+}
+
+.fs-7 {
+	font-size: 0.8rem;
 }
 
 #timer {

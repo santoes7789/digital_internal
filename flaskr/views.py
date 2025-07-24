@@ -31,6 +31,9 @@ def times():
             db.session.commit()
             print("deleted time")
             return "", 204
+        else:
+            return jsonify({"error": "Time not found"}), 404
+
     else:
         times_list = []
         if current_user.is_authenticated:

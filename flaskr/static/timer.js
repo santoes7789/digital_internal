@@ -75,26 +75,26 @@ function deleteTime(time) {
 	if (index == -1) return;
 
 	times.splice(index, 1);
-	fetch("/times", {
-		method: "DELETE",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(time)
-	})
-		.then(response => {
-			if (response.status == 204) {
-				console.log("Sucessfully deleted time on server")
-			} else {
-				console.log("Failed to delete time on server")
-			}
-		}).catch(error => {
-			console.error("Error:", error);
+	if (is_authenticated) {
+		fetch("/times", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(time)
 		})
-
+			.then(response => {
+				if (response.status == 204) {
+					console.log("Sucessfully deleted time on server")
+				} else {
+					console.log("Failed to delete time on server")
+				}
+			}).catch(error => {
+				console.error("Error:", error);
+			})
+	}
 	updateStats()
 }
-
 
 
 
