@@ -7,9 +7,12 @@
 	</div>
 
 	<div class="element-container bottom-0 start-0">
-		<p>best: <strong id="best-text">--</strong></p>
-		<p>ao5: <strong id="ao5-text">--</strong></p>
-		<p>ao12: <strong id="ao12-text">--</strong></p>
+		<p>Best: <strong id="best-text">--</strong></p>
+		<p>Ao5: <strong id="ao5-text">--</strong></p>
+		<p>Ao12: <strong id="ao12-text">--</strong></p>
+		<div>
+			<canvas id="myChart"></canvas>
+		</div>
 	</div>
 
 	<div class="element-container d-flex bottom-0 vw-100 justify-content-center">
@@ -36,6 +39,7 @@
 		</table>
 	</div>
 
+
 	<!-- Modal -->
 	<div class="modal fade" id="time-info-modal" tabindex="-1">
 		<div class="modal-dialog modal-dialog-centered">
@@ -59,6 +63,6 @@
 	</div>
 
 
-
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="static/timer.js"></script>
 {% endblock %}

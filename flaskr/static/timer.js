@@ -43,6 +43,7 @@ function fetchData() {
 			if (data) {
 				Object.assign(all_times, data);
 				current_times = all_times[current_session];
+				updateChart();
 				updateSessions();
 				updateStats();
 			}
@@ -80,6 +81,7 @@ function addTime(time) {
 
 	}
 	updateStats()
+	updateChart()
 }
 
 function deleteTime(time) {
@@ -108,6 +110,7 @@ function deleteTime(time) {
 			})
 	}
 	updateStats()
+	updateChart()
 }
 
 
@@ -131,6 +134,7 @@ function changeSession(session) {
 	current_times = all_times[current_session];
 	updateSessions();
 	updateStats();
+	updateChart();
 
 }
 function updateSessions() {
@@ -288,7 +292,7 @@ function stopTimer() {
 	timerState = "stopped";
 	const time = updateTimer() // Update final time
 	timerFading.classList.remove("show");
-	timerFading.addEventListener("transitionend", () => {
+	timerFading.addEventListener("webkitTransitionEnd", () => {
 		timerBackground.style.zIndex = 0;
 	}, { once: true })
 	addTime(time);
@@ -315,5 +319,33 @@ function millisecondsToTime(milli) {
 	}
 	str += String(seconds) + "." + String(milliseconds).padStart(3, "0");
 	return str;
+
+}
+
+const ctx = document.getElementById('myChart');
+
+
+Chart.defaults.font.size = 10;
+const data = {
+	labels: [],
+	datasets: [{
+		label: current_session,
+		data: [],
+	}]
+};
+
+const chart = new Chart(ctx, { type: "line", data: data });
+
+function updateChart() {
+	const raw_data = current_times.map(time => time["value"] / 1000);
+	chart.data.datasets[0].data = raw_data;
+	chart.data.labels = [];
+	for (let i = 0; i < raw_data.length; i++) {
+		chart.data.labels.push(i);
+	}
+
+	chart.update();
+
+	console.log(raw_data)
 
 }
